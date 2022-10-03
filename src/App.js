@@ -1,22 +1,18 @@
-import logo from './logo.svg';
+import globe from './globe.svg';
+import h from './h.svg';
 import './App.css';
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
+        <div class="badge">
+          <img src={globe} className="globe" alt="logo" />
+          <img src={h} className="h" alt="logo" />
+        </div>
         <p>
-          Edit <code>src/App.js</code> and save to reload.
+          Hacktoberfest 2022
         </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
       </header>
     </div>
   );
