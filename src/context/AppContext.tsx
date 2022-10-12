@@ -18,7 +18,7 @@ const State = z.object({
   maxStep: z.number().default(2),
   step: z.number().default(1),
   loading: z.boolean().default(true),
-  jenisID: z.string(),
+  jenisID: z.number(),
   noIdentitas: z.string().default(""),
   data: z.array(Data),
 });
@@ -32,7 +32,7 @@ type Dispatcher = {
   reset: () => void;
   setLoading: (loading: boolean) => void;
   setData: (data: Data[]) => void;
-  setJenisID: (jenisID: string) => void;
+  setJenisID: (jenisID: number) => void;
   setNoIdentitas: (noIdentitas: string) => void;
 };
 
@@ -62,7 +62,7 @@ const reducer = (draft: State, action: Action) => {
       return;
     case "RESET":
       draft.step = 1;
-      draft.jenisID = "";
+      draft.jenisID = 1;
       draft.noIdentitas = "";
       return;
     case "SET_DATA":
@@ -85,7 +85,7 @@ const initialState: State = {
   maxStep: 2,
   step: 1,
   loading: true,
-  jenisID: "KTP",
+  jenisID: 1,
   noIdentitas: "",
   data: [],
 };
@@ -94,7 +94,7 @@ export const AppContextProvider = (props: Props) => {
   const [state, dispatch] = useImmerReducer(reducer, initialState);
 
   const dispatcher: Dispatcher = {
-    setJenisID: (jenisID: string) =>
+    setJenisID: (jenisID: number) =>
       dispatch({ type: "JENIS_ID", payload: jenisID }),
     setNoIdentitas: (noIdentitas: string) =>
       dispatch({ type: "NO_IDENTITAS", payload: noIdentitas }),

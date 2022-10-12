@@ -5,12 +5,12 @@ const Step1 = () => {
 
   function jenis1() {
     next();
-    setJenisID("KTP");
+    setJenisID(1);
   }
 
   function jenis2() {
     next();
-    setJenisID("SIM");
+    setJenisID(2);
   }
 
   return (
@@ -21,13 +21,13 @@ const Step1 = () => {
           onClick={jenis1}
           className="flex justify-center items-center cursor-pointer w-[200px] h-[200px] bg-cyan-500 text-2xl rounded-xl"
         >
-          KTP
+          Virtual Account
         </div>
         <div
           onClick={jenis2}
           className="flex justify-center items-center cursor-pointer w-[200px] h-[200px] bg-indigo-600 text-2xl rounded-xl"
         >
-          SIM
+          Identitas
         </div>
       </div>
     </div>
