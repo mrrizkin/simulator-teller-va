@@ -1,0 +1,11 @@
+@keyframes globe-rotate1 {
+    100% {
+        width: 104px;
+    }
+}
+
+@keyframes globe-rotate2 {
+    100% {
+        width: 0px;
+    }
+}

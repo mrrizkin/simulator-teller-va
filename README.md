@@ -1,5 +1,5 @@
 <h1 align="center">
-  Vite + React + TSX
+  Simulator Teller Virtual Account
 </h1>
 
 ## Folder Structure
@@ -7,22 +7,26 @@
 No configuration or complicated folder structures, just the files you need to build your app:
 
 ```
-vite-template-react
-├── node_modules
+simulator-teller-va
 ├── public
 │   ├── favicon.svg
 │   └── robots.txt
-└── src
-    ├── assets
-    ├── components
-    ├── pages
-    ├── App.tsx
-    └── main.tsx
+├── src
+│   ├── assets
+│   ├── components
+│   ├── context
+│   ├── steps
+│   ├── App.tsx
+│   ├── index.css
+│   └── main.tsx
 ├── .gitignore
+├── README.md
 ├── index.html
 ├── package.json
-├── README.md
+├── tsconfig.json
+├── tsconfig.node.json
 ├── vite.config.js
+└── windi.config.js
 ```
 
 #### Available Scripts
