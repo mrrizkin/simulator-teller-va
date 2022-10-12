@@ -19,13 +19,13 @@ const Step1 = () => {
       <div className="relative w-full flex justify-center gap-x-32 mt-24">
         <div
           onClick={jenis1}
-          className="flex justify-center items-center cursor-pointer w-[200px] h-[200px] bg-zinc-700 text-2xl rounded-xl"
+          className="flex justify-center items-center cursor-pointer w-[200px] h-[200px] bg-cyan-500 text-2xl rounded-xl"
         >
           KTP
         </div>
         <div
           onClick={jenis2}
-          className="flex justify-center items-center cursor-pointer w-[200px] h-[200px] bg-zinc-700 text-2xl rounded-xl"
+          className="flex justify-center items-center cursor-pointer w-[200px] h-[200px] bg-indigo-600 text-2xl rounded-xl"
         >
           SIM
         </div>
