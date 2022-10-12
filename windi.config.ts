@@ -2,6 +2,16 @@ import { defineConfig } from "windicss/helpers";
 import plugin from "windicss/plugin";
 
 export default defineConfig({
+  theme: {
+    extend: {
+      animation: {
+        "globe-rotate1":
+          "1s linear 0s infinite alternate none running globe-rotate1",
+        "globe-rotate2":
+          "1s linear 0s infinite alternate none running globe-rotate2",
+      },
+    },
+  },
   plugins: [
     plugin(({ addUtilities }) => {
       addUtilities({
