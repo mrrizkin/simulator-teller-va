@@ -15,6 +15,7 @@ const Data = z.object({
 
 const State = z.object({
   debug: z.boolean().default(true),
+  token: z.string().default(""),
   maxStep: z.number().default(2),
   step: z.number().default(1),
   loading: z.boolean().default(true),
@@ -30,6 +31,7 @@ type Dispatcher = {
   next: () => void;
   back: () => void;
   reset: () => void;
+  setToken: (token: string) => void;
   setLoading: (loading: boolean) => void;
   setData: (data: Data[]) => void;
   setJenisID: (jenisID: number) => void;
@@ -54,10 +56,12 @@ const reducer = (draft: State, action: Action) => {
       return;
     case "NEXT":
       if (draft.step >= draft.maxStep) return;
+      if (draft.token === "") return;
       draft.step = draft.step + 1;
       return;
     case "BACK":
       if (draft.step <= 1) return;
+      if (draft.token === "") return;
       draft.step = draft.step - 1;
       return;
     case "RESET":
@@ -71,6 +75,9 @@ const reducer = (draft: State, action: Action) => {
     case "SET_LOADING":
       draft.loading = action.payload;
       return;
+    case "SET_TOKEN":
+      draft.token = action.payload;
+      return;
     default:
       return;
   }
@@ -82,7 +89,8 @@ interface Props {
 
 const initialState: State = {
   debug: true,
-  maxStep: 2,
+  token: "",
+  maxStep: 3,
   step: 1,
   loading: true,
   jenisID: 1,
@@ -101,6 +109,8 @@ export const AppContextProvider = (props: Props) => {
     setData: (data: Data[]) => dispatch({ type: "SET_DATA", payload: data }),
     setLoading: (loading: boolean) =>
       dispatch({ type: "SET_LOADING", payload: loading }),
+    setToken: (token: string) =>
+      dispatch({ type: "SET_TOKEN", payload: token }),
     next: () => dispatch({ type: "NEXT", payload: null }),
     back: () => dispatch({ type: "BACK", payload: null }),
     reset: () => dispatch({ type: "RESET", payload: null }),
