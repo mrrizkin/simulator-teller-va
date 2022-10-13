@@ -64,7 +64,7 @@ const Controller = () => {
             className="w-full bg-white text-black px-2 py-1"
             onClick={asignDummyToken}
           >
-            Asign Token
+            Assign Token
           </button>
         </div>
       )}
