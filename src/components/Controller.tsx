@@ -1,9 +1,12 @@
 import { ChangeEvent, useState } from "react";
-import { useAppDispatch } from "../context/AppContext";
+import { useAppDispatch, InquiryResponse } from "../context/AppContext";
 
 const Controller = () => {
-  const { setLoading, next, back, setToken } = useAppDispatch();
+  const { setLoading, next, back, setToken, setInquiryResponse } =
+    useAppDispatch();
+
   const [dummyToken, setDummyToken] = useState("");
+  const [dummyInquiryResponse, setDummyInquiryResponse] = useState("");
   const [show, setShow] = useState(true);
 
   function triggerLoading() {
@@ -13,12 +16,23 @@ const Controller = () => {
     }, 2500);
   }
 
-  function asignDummyToken() {
+  function assignDummyToken() {
     setToken(dummyToken);
+  }
+
+  function assignDummyInquiryResponse() {
+    const dummyResponse = InquiryResponse.parse(
+      JSON.parse(dummyInquiryResponse)
+    );
+    setInquiryResponse(dummyResponse);
   }
 
   function handleTokenChange(e: ChangeEvent<HTMLInputElement>) {
     setDummyToken(e.target.value);
+  }
+
+  function handleInquiryResponseChange(e: ChangeEvent<HTMLInputElement>) {
+    setDummyInquiryResponse(e.target.value);
   }
 
   function toggleShow() {
@@ -62,9 +76,22 @@ const Controller = () => {
           />
           <button
             className="w-full bg-white text-black px-2 py-1"
-            onClick={asignDummyToken}
+            onClick={assignDummyToken}
           >
             Assign Token
+          </button>
+          <input
+            type="text"
+            className="block my-2 py-1 px-2 text-black outline-none w-full"
+            placeholder="inquiry json response"
+            value={dummyInquiryResponse}
+            onChange={handleInquiryResponseChange}
+          />
+          <button
+            className="w-full bg-white text-black px-2 py-1"
+            onClick={assignDummyInquiryResponse}
+          >
+            Assign Inquiry Response
           </button>
         </div>
       )}

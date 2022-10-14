@@ -16,7 +16,7 @@ const Debugger = () => {
         State
       </h1>
       {show && (
-        <code className="block mt-2 max-h-[300px] max-w-[400px] overflow-y-auto">
+        <code className="block mt-2 max-h-[400px] max-w-[400px] overflow-y-auto">
           {JSON.stringify(state, null, 2)}
         </code>
       )}

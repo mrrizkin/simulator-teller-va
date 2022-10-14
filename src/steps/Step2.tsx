@@ -1,40 +1,42 @@
-import axios from "axios";
 import { ChangeEvent, FormEvent } from "react";
+import axios from "axios";
+
 import { useAppDispatch, useAppState } from "../context/AppContext";
+import { Label, TextInput } from "../components/Input";
 
 const Step2 = () => {
-  const { jenisID, noIdentitas, token } = useAppState();
-  const { setNoIdentitas, next, back, setData, setLoading } = useAppDispatch();
+  const { jenisID, inquiryRequest, token } = useAppState();
+  const {
+    setNoVA,
+    setNoIdentitas,
+    next,
+    back,
+    setLoading,
+    setInquiryResponse,
+  } = useAppDispatch();
 
-  function handleChange(e: ChangeEvent<HTMLInputElement>) {
-    setNoIdentitas(e.target.value);
-  }
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) =>
+    jenisID === 1 ? setNoVA(e.target.value) : setNoIdentitas(e.target.value);
 
   function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setLoading(true);
+
+    jenisID === 1 ? setNoIdentitas("0") : setNoVA("0");
+
+    const headers = {
+      Authorization: `Bearer ${token}`,
+    };
+
     axios
       .post(
         `${import.meta.env.VITE_API_URL}/external/inquiryVA`,
-        {
-          nomorVA: jenisID == 1 ? noIdentitas : "0",
-          nomorIdentitas: jenisID == 2 ? noIdentitas : "0",
-          kodeInstansi: "0",
-          kodeProduk: "0",
-          kodeKantorTx: "0",
-          kodeBank: "0",
-          stan: "210595",
-          rrn: "110480000001",
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
+        inquiryRequest,
+        { headers }
       )
       .then((res) => {
         setTimeout(() => {
-          setData(res.data);
+          setInquiryResponse(res.data);
           setLoading(false);
           next();
         }, 1500);
@@ -49,15 +51,20 @@ const Step2 = () => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <label htmlFor="name" className="text-xl block font-bold mb-4">
-        {jenisID == 1 ? "[No. Virtual Account]" : "[No. Identity]"}
-      </label>
-      <input
-        type="text"
-        value={noIdentitas}
-        onChange={handleChange}
-        className="block bg-transparent border-3 border-gray-500 rounded-md p-2 w-[300px] outline-none focus:border-blue-500"
-      />
+      {jenisID === 1 ? (
+        <>
+          <Label>[No. Virtual Account]</Label>
+          <TextInput value={inquiryRequest.nomorVA} onChange={handleChange} />
+        </>
+      ) : (
+        <>
+          <Label>[No. Identity]</Label>
+          <TextInput
+            value={inquiryRequest.nomorIdentitas}
+            onChange={handleChange}
+          />
+        </>
+      )}
       <button
         type="button"
         onClick={back}
