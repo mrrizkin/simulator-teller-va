@@ -14,11 +14,9 @@ const Step3 = () => {
 
   return (
     <div className="p-8">
-      <pre>
-        {response.success
-          ? JSON.stringify(response.data, null, 2)
-          : failedResponse.success && <Status {...failedResponse.data} />}
-      </pre>
+      {response.success
+        ? JSON.stringify(response.data, null, 2)
+        : failedResponse.success && <Status {...failedResponse.data} />}
     </div>
   );
 };

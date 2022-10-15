@@ -1,15 +1,18 @@
 import { useEffect } from "react";
 import axios from "axios";
 
-import Loading from "./components/Loading";
 import { useAppDispatch, useAppState } from "./context/AppContext";
+
 import NotFound from "./steps/404";
 import Refresh from "./steps/Refresh";
 import Step1 from "./steps/Step1";
 import Step2 from "./steps/Step2";
 import Step3 from "./steps/Step3";
+import Step4 from "./steps/Step4";
+
 import Debugger from "./components/Debugger";
 import Controller from "./components/Controller";
+import Loading from "./components/Loading";
 
 const App = () => {
   const { loading, debug } = useAppState();
@@ -48,15 +51,9 @@ const App = () => {
       )}
       <div
         onClick={toggleDebug}
-        className="fixed bottom-4 right-4 bg-black p-4 text-xs bg-opacity-40 flex gap-x-2 items-center"
+        className="fixed bottom-4 right-4 bg-black px-4 py-2 text-xs bg-opacity-40 flex gap-x-2 items-center cursor-pointer"
       >
-        <label htmlFor="debug">Debug</label>
-        <input
-          type="checkbox"
-          id="debug"
-          onChange={toggleDebug}
-          checked={debug}
-        />
+        Debug
       </div>
       {debug && <Debugger />}
       {debug && <Controller />}
@@ -74,6 +71,8 @@ const HandleStep = () => {
       return <Step2 />;
     case 3:
       return <Step3 />;
+    case 4:
+      return <Step4 />;
     default:
       return <NotFound />;
   }
