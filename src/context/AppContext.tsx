@@ -3,37 +3,66 @@ import { z } from "zod";
 import { useImmerReducer } from "use-immer";
 
 const Data = z.object({
-  noVA: z.string(),
-  rekSumber: z.string(),
-  rekSumberFee: z.string(),
+  nomorVA: z.string(),
+  rekeningFeeSumber: z.string(),
   namaProduk: z.string(),
   kodeTransaksi: z.string(),
-  jenisTransaksi: z.string(),
-  nominalVA: z.string(),
+  rekeningSumber: z.string(),
   nominalFee: z.string(),
+  nominalVA: z.string(),
+  jenisTransaksi: z.string(),
+});
+
+export const InquiryRequest = z.object({
+  nomorVA: z.string().default("0"),
+  nomorIdentitas: z.string().default("0"),
+  kodeInstansi: z.string().default("0"),
+  kodeProduk: z.string().default("0"),
+  kodeKantorTx: z.string().default("0"),
+  kodeBank: z.string().default("0"),
+  stan: z.string().default("210595"),
+  rrn: z.string().default("110480000001"),
+});
+
+export const InquiryResponse = z.object({
+  nomorVA: z.string(),
+  stan: z.string(),
+  nominalTotal: z.string(),
+  nomorIdentitas: z.string(),
+  jumlahData: z.string(),
+  additionalData: z.array(Data),
+  message: z.string(),
+  namaVA: z.string(),
+  status: z.string(),
+  rrn: z.string(),
 });
 
 const State = z.object({
   debug: z.boolean().default(true),
+  token: z.string().default(""),
   maxStep: z.number().default(2),
   step: z.number().default(1),
   loading: z.boolean().default(true),
   jenisID: z.number(),
-  noIdentitas: z.string().default(""),
-  data: z.array(Data),
+  inquiryResponse: InquiryResponse,
+  inquiryRequest: InquiryRequest,
 });
 
 type Data = z.infer<typeof Data>;
 type State = z.infer<typeof State>;
+type InquiryRequest = z.infer<typeof InquiryRequest>;
+type InquiryResponse = z.infer<typeof InquiryResponse>;
 
 type Dispatcher = {
   next: () => void;
   back: () => void;
   reset: () => void;
+  setToken: (token: string) => void;
   setLoading: (loading: boolean) => void;
-  setData: (data: Data[]) => void;
   setJenisID: (jenisID: number) => void;
   setNoIdentitas: (noIdentitas: string) => void;
+  setNoVA: (noVA: string) => void;
+  setInquiryResponse: (inquiryResponse: InquiryResponse) => void;
 };
 
 const AppContextState = createContext<State | null>(null);
@@ -50,26 +79,35 @@ const reducer = (draft: State, action: Action) => {
       draft.jenisID = action.payload;
       return;
     case "NO_IDENTITAS":
-      draft.noIdentitas = action.payload;
+      draft.inquiryRequest.nomorIdentitas = action.payload;
+      return;
+    case "NO_VA":
+      draft.inquiryRequest.nomorVA = action.payload;
       return;
     case "NEXT":
       if (draft.step >= draft.maxStep) return;
+      if (draft.token === "") return;
       draft.step = draft.step + 1;
       return;
     case "BACK":
       if (draft.step <= 1) return;
+      if (draft.token === "") return;
       draft.step = draft.step - 1;
       return;
     case "RESET":
       draft.step = 1;
       draft.jenisID = 1;
-      draft.noIdentitas = "";
+      draft.inquiryRequest.nomorVA = "";
+      draft.inquiryRequest.nomorIdentitas = "";
       return;
-    case "SET_DATA":
-      draft.data = action.payload;
+    case "SET_INQUIRY_RESPONSE":
+      draft.inquiryResponse = action.payload;
       return;
     case "SET_LOADING":
       draft.loading = action.payload;
+      return;
+    case "SET_TOKEN":
+      draft.token = action.payload;
       return;
     default:
       return;
@@ -82,12 +120,24 @@ interface Props {
 
 const initialState: State = {
   debug: true,
-  maxStep: 2,
+  token: "",
+  maxStep: 3,
   step: 1,
   loading: true,
   jenisID: 1,
-  noIdentitas: "",
-  data: [],
+  inquiryRequest: InquiryRequest.parse({ nomorVA: "", nomorIdentitas: "" }),
+  inquiryResponse: {
+    nomorVA: "",
+    stan: "",
+    nominalTotal: "",
+    nomorIdentitas: "",
+    jumlahData: "",
+    additionalData: [],
+    message: "",
+    namaVA: "",
+    status: "",
+    rrn: "",
+  },
 };
 
 export const AppContextProvider = (props: Props) => {
@@ -98,9 +148,13 @@ export const AppContextProvider = (props: Props) => {
       dispatch({ type: "JENIS_ID", payload: jenisID }),
     setNoIdentitas: (noIdentitas: string) =>
       dispatch({ type: "NO_IDENTITAS", payload: noIdentitas }),
-    setData: (data: Data[]) => dispatch({ type: "SET_DATA", payload: data }),
+    setNoVA: (noVA: string) => dispatch({ type: "NO_VA", payload: noVA }),
     setLoading: (loading: boolean) =>
       dispatch({ type: "SET_LOADING", payload: loading }),
+    setToken: (token: string) =>
+      dispatch({ type: "SET_TOKEN", payload: token }),
+    setInquiryResponse: (inquiryResponse: InquiryResponse) =>
+      dispatch({ type: "SET_INQUIRY_RESPONSE", payload: inquiryResponse }),
     next: () => dispatch({ type: "NEXT", payload: null }),
     back: () => dispatch({ type: "BACK", payload: null }),
     reset: () => dispatch({ type: "RESET", payload: null }),
