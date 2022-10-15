@@ -1,35 +1,25 @@
-import { useAppDispatch, useAppState } from "../context/AppContext";
+import { useState } from "react";
+import { useAppState } from "../context/AppContext";
 
 const Debugger = () => {
   const state = useAppState();
-  const { setLoading, next, back } = useAppDispatch();
+  const [show, setShow] = useState(true);
 
-  function triggerLoading() {
-    setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-    }, 2500);
+  function toggleShow() {
+    setShow(!show);
   }
+
   return (
-    <pre className="fixed top-4 left-4 bg-black p-4 text-xs">
-      <h1 className="font-bold text-sm text-center">Debug Menu</h1>
-      <code className="block mt-2 max-h-[300px] overflow-y-auto">
-        {JSON.stringify(state, null, 2)}
-      </code>
-      <button
-        className="w-full bg-white text-black px-2 py-1 mt-2"
-        onClick={triggerLoading}
-      >
-        Trigger loading
-      </button>
-      <div className="flex gap-x-2 mt-2">
-        <button onClick={back} className="flex-1 bg-white text-black px-2 py-1">
-          back
-        </button>
-        <button onClick={next} className="flex-1 bg-white text-black px-2 py-1">
-          next
-        </button>
-      </div>
+    <pre className="fixed top-4 left-4 bg-black p-4 text-xs bg-opacity-40">
+      <h1 className="font-bold text-sm flex items-center justify-center">
+        <input onChange={toggleShow} checked={show} type="checkbox" /> Debug
+        State
+      </h1>
+      {show && (
+        <code className="block mt-2 max-h-[400px] max-w-[400px] overflow-y-auto">
+          {JSON.stringify(state, null, 2)}
+        </code>
+      )}
     </pre>
   );
 };
