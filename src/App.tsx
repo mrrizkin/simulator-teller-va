@@ -1,38 +1,20 @@
-import { useEffect } from "react";
-import axios from "axios";
+import { useEffect, useState } from "react";
 
 import Loading from "./components/Loading";
 import { useAppDispatch, useAppState } from "./context/AppContext";
 import NotFound from "./steps/404";
-import Refresh from "./steps/Refresh";
+import Debugger from "./components/Debugger";
 import Step1 from "./steps/Step1";
 import Step2 from "./steps/Step2";
-import Step3 from "./steps/Step3";
-import Debugger from "./components/Debugger";
-import Controller from "./components/Controller";
 
 const App = () => {
   const { loading, debug } = useAppState();
-  const { setLoading, setToken } = useAppDispatch();
+  const { setLoading } = useAppDispatch();
 
   useEffect(() => {
-    axios
-      .post(`${import.meta.env.VITE_API_URL}/external/auth`, {
-        username: "su",
-        password: "rahasia",
-      })
-      .then((res) => {
-        setTimeout(() => {
-          setToken(res.data.token);
-          setLoading(false);
-        }, 1500);
-      })
-      .catch((e) => {
-        setTimeout(() => {
-          console.warn(e);
-          setLoading(false);
-        }, 1500);
-      });
+    setTimeout(() => {
+      setLoading(false);
+    }, 2500);
   }, []);
 
   return (
@@ -47,21 +29,17 @@ const App = () => {
         <HandleStep />
       )}
       {debug && <Debugger />}
-      {debug && <Controller />}
     </div>
   );
 };
 
 const HandleStep = () => {
-  const { step, token } = useAppState();
-  if (!token) return <Refresh />;
+  const { step } = useAppState();
   switch (step) {
     case 1:
       return <Step1 />;
     case 2:
       return <Step2 />;
-    case 3:
-      return <Step3 />;
     default:
       return <NotFound />;
   }
