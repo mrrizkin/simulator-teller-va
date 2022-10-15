@@ -13,7 +13,7 @@ import Controller from "./components/Controller";
 
 const App = () => {
   const { loading, debug } = useAppState();
-  const { setLoading, setToken } = useAppDispatch();
+  const { setLoading, setToken, toggleDebug } = useAppDispatch();
 
   useEffect(() => {
     axios
@@ -46,6 +46,18 @@ const App = () => {
       ) : (
         <HandleStep />
       )}
+      <div
+        onClick={toggleDebug}
+        className="fixed bottom-4 right-4 bg-black p-4 text-xs bg-opacity-40 flex gap-x-2 items-center"
+      >
+        <label htmlFor="debug">Debug</label>
+        <input
+          type="checkbox"
+          id="debug"
+          onChange={toggleDebug}
+          checked={debug}
+        />
+      </div>
       {debug && <Debugger />}
       {debug && <Controller />}
     </div>
