@@ -3,14 +3,11 @@ import { useAppDispatch } from "../context/AppContext";
 const Step1 = () => {
   const { next, setJenisID } = useAppDispatch();
 
-  function jenis1() {
-    next();
-    setJenisID(1);
-  }
-
-  function jenis2() {
-    next();
-    setJenisID(2);
+  function jenis(type: number) {
+    return function () {
+      setJenisID(type);
+      next();
+    };
   }
 
   return (
@@ -18,16 +15,16 @@ const Step1 = () => {
       <h1 className="text-4xl font-bold">Simulator Teller Virtual Account</h1>
       <div className="relative w-full flex justify-center gap-x-32 mt-24">
         <div
-          onClick={jenis1}
+          onClick={jenis(1)}
           className="flex justify-center items-center cursor-pointer w-[200px] h-[200px] bg-cyan-500 text-2xl rounded-xl"
         >
           Virtual Account
         </div>
         <div
-          onClick={jenis2}
+          onClick={jenis(2)}
           className="flex justify-center items-center cursor-pointer w-[200px] h-[200px] bg-indigo-600 text-2xl rounded-xl"
         >
-          Identitas
+          Identity
         </div>
       </div>
     </div>
