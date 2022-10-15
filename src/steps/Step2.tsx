@@ -1,10 +1,11 @@
-import { ChangeEvent, FormEvent } from "react";
+import { ChangeEvent, FormEvent, useState } from "react";
 import axios from "axios";
 
 import { useAppDispatch, useAppState } from "../context/AppContext";
 import { Label, TextInput } from "../components/Input";
 
 const Step2 = () => {
+  const [showFormDetail, setShowFormDetail] = useState(false);
   const { jenisID, inquiryRequest, token } = useAppState();
   const {
     setNoVA,
@@ -49,12 +50,20 @@ const Step2 = () => {
       });
   }
 
+  function toggleFormDetail() {
+    setShowFormDetail(!showFormDetail);
+  }
+
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="w-xl">
       {jenisID === 1 ? (
         <>
-          <Label>[No. Virtual Account]</Label>
-          <TextInput value={inquiryRequest.nomorVA} onChange={handleChange} />
+          <Label className="text-xl">[No. Virtual Account]</Label>
+          <TextInput
+            value={inquiryRequest.nomorVA}
+            onChange={handleChange}
+            className="border-3 border-gray-500 p-2"
+          />
         </>
       ) : (
         <>
@@ -65,6 +74,68 @@ const Step2 = () => {
           />
         </>
       )}
+      {showFormDetail && (
+        <div className="text-gray-400">
+          <div className="flex gap-8 py-4">
+            <div className="flex-1">
+              <Label>[Kode Instansi]</Label>
+              <TextInput
+                value={inquiryRequest.kodeInstansi}
+                className="border-3 border-gray-500 p-1"
+              />
+            </div>
+            <div className="flex-1">
+              <Label>[Kode Produk]</Label>
+              <TextInput
+                value={inquiryRequest.kodeProduk}
+                className="border-3 border-gray-500 p-1"
+              />
+            </div>
+          </div>
+          <div className="flex gap-8 py-4">
+            <div className="flex-1">
+              <Label>[Kode Kantor Tx]</Label>
+              <TextInput
+                value={inquiryRequest.kodeKantorTx}
+                className="border-3 border-gray-500 p-1"
+              />
+            </div>
+            <div className="flex-1">
+              <Label>[Kode Bank]</Label>
+              <TextInput
+                value={inquiryRequest.kodeBank}
+                className="border-3 border-gray-500 p-1"
+              />
+            </div>
+          </div>
+          <div className="flex gap-8 py-4">
+            <div className="flex-1">
+              <Label>[stan]</Label>
+              <TextInput
+                value={inquiryRequest.stan}
+                className="border-3 border-gray-500 p-1"
+              />
+            </div>
+            <div className="flex-1">
+              <Label>[rrn]</Label>
+              <TextInput
+                value={inquiryRequest.rrn}
+                className="border-3 border-gray-500 p-1"
+              />
+            </div>
+          </div>
+        </div>
+      )}
+      <div className="text-xs mt-4 flex gap-x-2 items-center">
+        <input
+          type="checkbox"
+          name="showFormDetail"
+          id="showFormDetail"
+          onChange={toggleFormDetail}
+          checked={showFormDetail}
+        />
+        <label htmlFor="showFormDetail">Show From Detail</label>
+      </div>
       <button
         type="button"
         onClick={back}

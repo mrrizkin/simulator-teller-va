@@ -37,6 +37,21 @@ export const InquiryResponse = z.object({
   rrn: z.string(),
 });
 
+export const PaymentVARequest = z.object({
+  nomorVA: z.string().default("0"),
+  nominalVA: z.string().default("0"),
+  kodeTransaksi: z.string().default("0"),
+  kodeKantorTx: z.string().default("K"),
+  kodeBank: z.string().default("0"),
+  stan: z.string().default("210595"),
+  rrn: z.string().default("110480000001"),
+});
+
+export const ResponseStatus = z.object({
+  message: z.string(),
+  status: z.string(),
+});
+
 const State = z.object({
   debug: z.boolean().default(true),
   token: z.string().default(""),
@@ -44,14 +59,18 @@ const State = z.object({
   step: z.number().default(1),
   loading: z.boolean().default(true),
   jenisID: z.number(),
-  inquiryResponse: InquiryResponse,
   inquiryRequest: InquiryRequest,
+  inquiryResponse: InquiryResponse,
+  paymentVARequest: PaymentVARequest,
+  paymentVAResponse: ResponseStatus,
 });
 
 type Data = z.infer<typeof Data>;
 type State = z.infer<typeof State>;
 type InquiryRequest = z.infer<typeof InquiryRequest>;
 type InquiryResponse = z.infer<typeof InquiryResponse>;
+type PaymentVARequest = z.infer<typeof PaymentVARequest>;
+type ResponseStatus = z.infer<typeof ResponseStatus>;
 
 type Dispatcher = {
   next: () => void;
@@ -63,6 +82,8 @@ type Dispatcher = {
   setNoIdentitas: (noIdentitas: string) => void;
   setNoVA: (noVA: string) => void;
   setInquiryResponse: (inquiryResponse: InquiryResponse) => void;
+  setPaymentVAResponse: (responseStatus: ResponseStatus) => void;
+  toggleDebug: () => void;
 };
 
 const AppContextState = createContext<State | null>(null);
@@ -95,19 +116,22 @@ const reducer = (draft: State, action: Action) => {
       draft.step = draft.step - 1;
       return;
     case "RESET":
-      draft.step = 1;
-      draft.jenisID = 1;
-      draft.inquiryRequest.nomorVA = "";
-      draft.inquiryRequest.nomorIdentitas = "";
+      window.location.reload();
       return;
     case "SET_INQUIRY_RESPONSE":
       draft.inquiryResponse = action.payload;
+      return;
+    case "SET_PAYMENTVA_RESPONSE":
+      draft.paymentVAResponse = action.payload;
       return;
     case "SET_LOADING":
       draft.loading = action.payload;
       return;
     case "SET_TOKEN":
       draft.token = action.payload;
+      return;
+    case "TOGGLE_DEBUG":
+      draft.debug = !draft.debug;
       return;
     default:
       return;
@@ -119,9 +143,9 @@ interface Props {
 }
 
 const initialState: State = {
-  debug: true,
+  debug: false,
   token: "",
-  maxStep: 3,
+  maxStep: 4,
   step: 1,
   loading: true,
   jenisID: 1,
@@ -137,6 +161,11 @@ const initialState: State = {
     namaVA: "",
     status: "",
     rrn: "",
+  },
+  paymentVARequest: PaymentVARequest.parse({ nomorVA: "", nominalVA: "" }),
+  paymentVAResponse: {
+    message: "",
+    status: "",
   },
 };
 
@@ -155,9 +184,12 @@ export const AppContextProvider = (props: Props) => {
       dispatch({ type: "SET_TOKEN", payload: token }),
     setInquiryResponse: (inquiryResponse: InquiryResponse) =>
       dispatch({ type: "SET_INQUIRY_RESPONSE", payload: inquiryResponse }),
+    setPaymentVAResponse: (paymentVAResponse: ResponseStatus) =>
+      dispatch({ type: "SET_PAYMENTVA_RESPONSE", payload: paymentVAResponse }),
     next: () => dispatch({ type: "NEXT", payload: null }),
     back: () => dispatch({ type: "BACK", payload: null }),
     reset: () => dispatch({ type: "RESET", payload: null }),
+    toggleDebug: () => dispatch({ type: "TOGGLE_DEBUG", payload: null }),
   };
 
   return (
