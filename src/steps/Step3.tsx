@@ -1,31 +1,25 @@
-import { ChangeEvent, FormEvent } from "react";
-import { useAppDispatch, useAppState } from "../context/AppContext";
+import {
+  useAppState,
+  InquiryResponse,
+  ResponseStatus,
+} from "../context/AppContext";
+
+import Status from "./Status";
 
 const Step3 = () => {
-  const { noIdentitas } = useAppState();
-  const { setNoIdentitas, next } = useAppDispatch();
+  const { inquiryResponse } = useAppState();
 
-  function handleChange(e: ChangeEvent<HTMLInputElement>) {
-    setNoIdentitas(e.target.value);
-  }
-
-  function handleSubmit(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    next();
-  }
+  let response = InquiryResponse.safeParse(inquiryResponse);
+  let failedResponse = ResponseStatus.safeParse(inquiryResponse);
 
   return (
-    <form onSubmit={handleSubmit}>
-      <label htmlFor="name" className="text-xl block font-bold">
-        STEP 3
-      </label>
-      <input
-        type="text"
-        value={noIdentitas}
-        onChange={handleChange}
-        className="bg-transparent border-3 border-gray-500 rounded-md p-2 w-[300px] outline-none focus:border-blue-500"
-      />
-    </form>
+    <div className="p-8">
+      <pre>
+        {response.success
+          ? JSON.stringify(response.data, null, 2)
+          : failedResponse.success && <Status {...failedResponse.data} />}
+      </pre>
+    </div>
   );
 };
 
