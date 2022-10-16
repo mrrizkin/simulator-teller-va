@@ -1,7 +1,6 @@
 import { useContext, ReactNode, createContext } from "react";
 import { z } from "zod";
 import { useImmerReducer } from "use-immer";
-import Request from "../helpers/request";
 
 const Data = z.object({
   nomorVA: z.string(),
@@ -64,7 +63,6 @@ const State = z.object({
   inquiryResponse: InquiryResponse,
   paymentVARequest: PaymentVARequest,
   paymentVAResponse: ResponseStatus,
-  request: z.instanceof(Request),
 });
 
 type Data = z.infer<typeof Data>;
@@ -159,7 +157,6 @@ const reducer = (draft: State, action: Action) => {
       return;
     case "SET_TOKEN":
       draft.token = action.payload;
-      draft.request.setToken(action.payload);
       return;
     case "TOGGLE_DEBUG":
       draft.debug = !draft.debug;
@@ -198,11 +195,9 @@ const initialState: State = {
     message: "",
     status: "",
   },
-  request: new Request(""),
 };
 
 export const AppContextProvider = (props: Props) => {
-  // @ts-ignore: this is fine :')
   const [state, dispatch] = useImmerReducer(reducer, initialState);
 
   const dispatcher: Dispatcher = {

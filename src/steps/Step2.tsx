@@ -1,11 +1,12 @@
 import { ChangeEvent, FormEvent, useState } from "react";
+import axios from "axios";
 
 import { useAppDispatch, useAppState } from "../context/AppContext";
 import { Label, TextInput } from "../components/Input";
 
 const Step2 = () => {
   const [showFormDetail, setShowFormDetail] = useState(false);
-  const { request, jenisID, inquiryRequest } = useAppState();
+  const { token, jenisID, inquiryRequest } = useAppState();
   const {
     setNoVA,
     setNoIdentitas,
@@ -30,8 +31,12 @@ const Step2 = () => {
 
     jenisID === 1 ? setNoIdentitas("0") : setNoVA("0");
 
-    request
-      .post("/external/inquiryVA", inquiryRequest)
+    axios
+      .post(
+        `${import.meta.env.VITE_API_URL}/external/inquiryVA`,
+        inquiryRequest,
+        { headers: { Authorization: `Bearer ${token}` } }
+      )
       .then((res: any) => {
         setTimeout(() => {
           setInquiryResponse(res.data);

@@ -1,4 +1,6 @@
 import { ChangeEvent, FormEvent, useState } from "react";
+import axios from "axios";
+
 import {
   useAppState,
   useAppDispatch,
@@ -10,7 +12,7 @@ import { rupiah } from "../helpers/formatters";
 import Status from "./Status";
 
 const Step3 = () => {
-  const { inquiryRequest, inquiryResponse, paymentVARequest, request } =
+  const { inquiryRequest, token, inquiryResponse, paymentVARequest } =
     useAppState();
   const { back, next, setLoading, setPaymentVARequest, setPaymentVAResponse } =
     useAppDispatch();
@@ -45,8 +47,12 @@ const Step3 = () => {
         rrn: inquiryRequest.rrn,
       });
 
-      request
-        .post("/external/paymentVA", paymentVARequest)
+      axios
+        .post(
+          `${import.meta.env.VITE_API_URL}/external/paymentVA`,
+          paymentVARequest,
+          { headers: { Authorization: `Bearer ${token}` } }
+        )
         .then((res: any) => {
           setTimeout(() => {
             setPaymentVAResponse(res.data);
