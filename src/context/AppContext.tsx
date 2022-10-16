@@ -83,6 +83,12 @@ type Dispatcher = {
   setJenisID: (jenisID: number) => void;
   setNoIdentitas: (noIdentitas: string) => void;
   setNoVA: (noVA: string) => void;
+  setKodeInstansi: (kodeInstansi: string) => void;
+  setKodeProduk: (kodeProduk: string) => void;
+  setKodeKantorTx: (kodeKantorTx: string) => void;
+  setKodeBank: (kodeBank: string) => void;
+  setStan: (stan: string) => void;
+  setRrn: (rrn: string) => void;
   setInquiryResponse: (inquiryResponse: InquiryResponse) => void;
   setPaymentVAResponse: (responseStatus: ResponseStatus) => void;
   toggleDebug: () => void;
@@ -106,6 +112,24 @@ const reducer = (draft: State, action: Action) => {
       return;
     case "NO_VA":
       draft.inquiryRequest.nomorVA = action.payload;
+      return;
+    case "KODE_BANK":
+      draft.inquiryRequest.kodeBank = action.payload;
+      return;
+    case "KODE_PRODUK":
+      draft.inquiryRequest.kodeProduk = action.payload;
+      return;
+    case "KODE_INSTANSI":
+      draft.inquiryRequest.kodeInstansi = action.payload;
+      return;
+    case "KODE_KANTOR_TX":
+      draft.inquiryRequest.kodeKantorTx = action.payload;
+      return;
+    case "STAN":
+      draft.inquiryRequest.stan = action.payload;
+      return;
+    case "RRN":
+      draft.inquiryRequest.rrn = action.payload;
       return;
     case "NEXT":
       if (draft.step >= draft.maxStep) return;
@@ -183,6 +207,16 @@ export const AppContextProvider = (props: Props) => {
     setNoIdentitas: (noIdentitas: string) =>
       dispatch({ type: "NO_IDENTITAS", payload: noIdentitas }),
     setNoVA: (noVA: string) => dispatch({ type: "NO_VA", payload: noVA }),
+    setKodeBank: (kodeBank: string) =>
+      dispatch({ type: "KODE_BANK", payload: kodeBank }),
+    setKodeInstansi: (kodeInstansi: string) =>
+      dispatch({ type: "KODE_INSTANSI", payload: kodeInstansi }),
+    setKodeKantorTx: (kodeKantorTx: string) =>
+      dispatch({ type: "KODE_KANTOR_TX", payload: kodeKantorTx }),
+    setKodeProduk: (kodeProduk: string) =>
+      dispatch({ type: "KODE_PRODUK", payload: kodeProduk }),
+    setRrn: (rrn: string) => dispatch({ type: "RRN", payload: rrn }),
+    setStan: (stan: string) => dispatch({ type: "STAN", payload: stan }),
     setLoading: (loading: boolean) =>
       dispatch({ type: "SET_LOADING", payload: loading }),
     setToken: (token: string) =>

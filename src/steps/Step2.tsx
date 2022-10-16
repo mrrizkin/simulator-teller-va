@@ -13,6 +13,12 @@ const Step2 = () => {
     back,
     setLoading,
     setInquiryResponse,
+    setStan,
+    setRrn,
+    setKodeProduk,
+    setKodeInstansi,
+    setKodeBank,
+    setKodeKantorTx,
   } = useAppDispatch();
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) =>
@@ -73,6 +79,9 @@ const Step2 = () => {
               <Label>[Kode Instansi]</Label>
               <TextInput
                 value={inquiryRequest.kodeInstansi}
+                onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                  setKodeInstansi(e.currentTarget.value)
+                }
                 className="border-3 border-gray-500 p-1"
               />
             </div>
@@ -80,6 +89,9 @@ const Step2 = () => {
               <Label>[Kode Produk]</Label>
               <TextInput
                 value={inquiryRequest.kodeProduk}
+                onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                  setKodeProduk(e.currentTarget.value)
+                }
                 className="border-3 border-gray-500 p-1"
               />
             </div>
@@ -89,6 +101,9 @@ const Step2 = () => {
               <Label>[Kode Kantor Tx]</Label>
               <TextInput
                 value={inquiryRequest.kodeKantorTx}
+                onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                  setKodeKantorTx(e.currentTarget.value)
+                }
                 className="border-3 border-gray-500 p-1"
               />
             </div>
@@ -96,6 +111,9 @@ const Step2 = () => {
               <Label>[Kode Bank]</Label>
               <TextInput
                 value={inquiryRequest.kodeBank}
+                onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                  setKodeBank(e.currentTarget.value)
+                }
                 className="border-3 border-gray-500 p-1"
               />
             </div>
@@ -105,6 +123,9 @@ const Step2 = () => {
               <Label>[stan]</Label>
               <TextInput
                 value={inquiryRequest.stan}
+                onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                  setStan(e.currentTarget.value)
+                }
                 className="border-3 border-gray-500 p-1"
               />
             </div>
@@ -112,6 +133,9 @@ const Step2 = () => {
               <Label>[rrn]</Label>
               <TextInput
                 value={inquiryRequest.rrn}
+                onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                  setRrn(e.currentTarget.value)
+                }
                 className="border-3 border-gray-500 p-1"
               />
             </div>
