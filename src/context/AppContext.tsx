@@ -90,6 +90,7 @@ type Dispatcher = {
   setStan: (stan: string) => void;
   setRrn: (rrn: string) => void;
   setInquiryResponse: (inquiryResponse: InquiryResponse) => void;
+  setPaymentVARequest: (paymentVARequest: PaymentVARequest) => void;
   setPaymentVAResponse: (responseStatus: ResponseStatus) => void;
   toggleDebug: () => void;
 };
@@ -146,6 +147,9 @@ const reducer = (draft: State, action: Action) => {
       return;
     case "SET_INQUIRY_RESPONSE":
       draft.inquiryResponse = action.payload;
+      return;
+    case "SET_PAYMENTVA_REQUEST":
+      draft.paymentVARequest = action.payload;
       return;
     case "SET_PAYMENTVA_RESPONSE":
       draft.paymentVAResponse = action.payload;
@@ -223,6 +227,8 @@ export const AppContextProvider = (props: Props) => {
       dispatch({ type: "SET_TOKEN", payload: token }),
     setInquiryResponse: (inquiryResponse: InquiryResponse) =>
       dispatch({ type: "SET_INQUIRY_RESPONSE", payload: inquiryResponse }),
+    setPaymentVARequest: (paymentVARequest: PaymentVARequest) =>
+      dispatch({ type: "SET_PAYMENTVA_REQUEST", payload: paymentVARequest }),
     setPaymentVAResponse: (paymentVAResponse: ResponseStatus) =>
       dispatch({ type: "SET_PAYMENTVA_RESPONSE", payload: paymentVAResponse }),
     next: () => dispatch({ type: "NEXT", payload: null }),

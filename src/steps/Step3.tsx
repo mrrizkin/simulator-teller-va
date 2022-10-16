@@ -1,6 +1,7 @@
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, FormEvent, useState } from "react";
 import {
   useAppState,
+  useAppDispatch,
   InquiryResponse,
   ResponseStatus,
 } from "../context/AppContext";
@@ -9,7 +10,10 @@ import { rupiah } from "../helpers/formatters";
 import Status from "./Status";
 
 const Step3 = () => {
-  const { inquiryResponse } = useAppState();
+  const { inquiryRequest, inquiryResponse, paymentVARequest, request } =
+    useAppState();
+  const { back, next, setLoading, setPaymentVARequest, setPaymentVAResponse } =
+    useAppDispatch();
   const [selectedPayment, setSelectedPayment] = useState("0");
 
   let response = InquiryResponse.safeParse(inquiryResponse);
@@ -23,10 +27,51 @@ const Step3 = () => {
     return selectedPayment === value;
   }
 
+  function handleSubmit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setLoading(true);
+
+    if (response.success) {
+      setPaymentVARequest({
+        nomorVA:
+          response.data.additionalData[parseInt(selectedPayment)].nomorVA,
+        nominalVA:
+          response.data.additionalData[parseInt(selectedPayment)].nominalVA,
+        kodeTransaksi:
+          response.data.additionalData[parseInt(selectedPayment)].kodeTransaksi,
+        kodeKantorTx: inquiryRequest.kodeKantorTx,
+        kodeBank: inquiryRequest.kodeBank,
+        stan: inquiryRequest.stan,
+        rrn: inquiryRequest.rrn,
+      });
+
+      request
+        .post("/external/paymentVA", paymentVARequest)
+        .then((res: any) => {
+          setTimeout(() => {
+            setPaymentVAResponse(res.data);
+            setLoading(false);
+            next();
+          }, 1500);
+        })
+        .catch((e: any) => {
+          setTimeout(() => {
+            console.warn(e);
+            setLoading(false);
+          }, 1500);
+        });
+    } else {
+      setTimeout(() => {
+        console.warn("Can't submit if inquiry response is invalid");
+        setLoading(false);
+      }, 1500);
+    }
+  }
+
   return (
     <div className="p-8 max-w-3xl w-full">
       {response.success ? (
-        <>
+        <form onSubmit={handleSubmit}>
           <table>
             <tbody>
               <tr>
@@ -124,7 +169,19 @@ const Step3 = () => {
               </tr>
             </tbody>
           </table>
-        </>
+          <button
+            type="button"
+            onClick={back}
+            className="bg-gray-500 text-white mr-4 rounded-md mt-4 px-8 py-2 outline-none focus:border-blue-500"
+          >
+            Back
+          </button>
+          <input
+            type="submit"
+            value="Next"
+            className="bg-blue-500 text-white rounded-md mt-4 px-8 py-2 outline-none focus:border-blue-500"
+          />
+        </form>
       ) : (
         failedResponse.success && <Status {...failedResponse.data} />
       )}
