@@ -1,12 +1,11 @@
 import { ChangeEvent, FormEvent, useState } from "react";
-import axios from "axios";
 
 import { useAppDispatch, useAppState } from "../context/AppContext";
 import { Label, TextInput } from "../components/Input";
 
 const Step2 = () => {
   const [showFormDetail, setShowFormDetail] = useState(false);
-  const { jenisID, inquiryRequest, token } = useAppState();
+  const { request, jenisID, inquiryRequest } = useAppState();
   const {
     setNoVA,
     setNoIdentitas,
@@ -25,24 +24,16 @@ const Step2 = () => {
 
     jenisID === 1 ? setNoIdentitas("0") : setNoVA("0");
 
-    const headers = {
-      Authorization: `Bearer ${token}`,
-    };
-
-    axios
-      .post(
-        `${import.meta.env.VITE_API_URL}/external/inquiryVA`,
-        inquiryRequest,
-        { headers }
-      )
-      .then((res) => {
+    request
+      .post("/external/inquiryVA", inquiryRequest)
+      .then((res: any) => {
         setTimeout(() => {
           setInquiryResponse(res.data);
           setLoading(false);
           next();
         }, 1500);
       })
-      .catch((e) => {
+      .catch((e: any) => {
         setTimeout(() => {
           console.warn(e);
           setLoading(false);
@@ -55,7 +46,7 @@ const Step2 = () => {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="w-xl">
+    <form onSubmit={handleSubmit} className="max-w-xl w-full">
       {jenisID === 1 ? (
         <>
           <Label className="text-xl">[No. Virtual Account]</Label>
@@ -67,10 +58,11 @@ const Step2 = () => {
         </>
       ) : (
         <>
-          <Label>[No. Identity]</Label>
+          <Label className="text-xl">[No. Identity]</Label>
           <TextInput
             value={inquiryRequest.nomorIdentitas}
             onChange={handleChange}
+            className="border-3 border-gray-500 p-2"
           />
         </>
       )}
@@ -134,7 +126,7 @@ const Step2 = () => {
           onChange={toggleFormDetail}
           checked={showFormDetail}
         />
-        <label htmlFor="showFormDetail">Show From Detail</label>
+        <label htmlFor="showFormDetail">Show Form Detail</label>
       </div>
       <button
         type="button"

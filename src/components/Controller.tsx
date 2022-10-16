@@ -1,9 +1,14 @@
 import { ChangeEvent, useState } from "react";
-import { useAppDispatch, InquiryResponse } from "../context/AppContext";
+import {
+  useAppDispatch,
+  useAppState,
+  InquiryResponse,
+} from "../context/AppContext";
 
 const Controller = () => {
   const { setLoading, reset, next, back, setToken, setInquiryResponse } =
     useAppDispatch();
+  const { step, maxStep, loading } = useAppState();
 
   const [dummyToken, setDummyToken] = useState("");
   const [dummyInquiryResponse, setDummyInquiryResponse] = useState("");
@@ -49,8 +54,11 @@ const Controller = () => {
         {show && (
           <div className="flex flex-col">
             <button
-              className="w-full bg-white text-black px-2 py-1 mt-2"
+              className={`w-full bg-white text-black px-2 py-1 mt-2 ${
+                loading && "opacity-50"
+              }`}
               onClick={triggerLoading}
+              disabled={loading}
             >
               Trigger loading
             </button>
@@ -63,13 +71,19 @@ const Controller = () => {
             <div className="flex gap-x-2 mt-2">
               <button
                 onClick={back}
-                className="flex-1 bg-white text-black px-2 py-1"
+                className={`flex-1 bg-white text-black px-2 py-1 ${
+                  step === 1 && "opacity-50"
+                }`}
+                disabled={step === 1}
               >
                 back
               </button>
               <button
                 onClick={next}
-                className="flex-1 bg-white text-black px-2 py-1"
+                className={`flex-1 bg-white text-black px-2 py-1 ${
+                  step === maxStep && "opacity-50"
+                }`}
+                disabled={step === maxStep}
               >
                 next
               </button>

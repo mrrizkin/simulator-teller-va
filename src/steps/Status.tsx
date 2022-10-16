@@ -4,10 +4,18 @@ import { z } from "zod";
 const Status = (props: z.infer<typeof ResponseStatus>) => {
   const { back } = useAppDispatch();
 
+  const { status, message } = props;
+
   return (
     <div className="flex flex-col gap-y-4 items-center">
       <h1 className="text-xl">
-        status code: <span>{props.status}</span>, <span>{props.message}</span>
+        {status.length > 0 || message.length > 0 ? (
+          <>
+            status code: <span>{status}</span>, <span>{message}</span>
+          </>
+        ) : (
+          "Oops! Something went wrong"
+        )}
       </h1>
       <button
         type="button"
