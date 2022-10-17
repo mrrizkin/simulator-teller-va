@@ -37,32 +37,63 @@ export const InquiryResponse = z.object({
   rrn: z.string(),
 });
 
+export const PaymentVARequest = z.object({
+  nomorVA: z.string().default("0"),
+  nominalVA: z.string().default("0"),
+  kodeTransaksi: z.string().default("0"),
+  kodeKantorTx: z.string().default("K"),
+  kodeBank: z.string().default("0"),
+  stan: z.string().default("210595"),
+  rrn: z.string().default("110480000001"),
+});
+
+export const ResponseStatus = z.object({
+  message: z.string(),
+  status: z.string(),
+});
+
 const State = z.object({
   debug: z.boolean().default(true),
   token: z.string().default(""),
-  maxStep: z.number().default(2),
+  maxStep: z.number().default(5),
   step: z.number().default(1),
   loading: z.boolean().default(true),
   jenisID: z.number(),
-  inquiryResponse: InquiryResponse,
+  modeTransaksi: z.string(),
   inquiryRequest: InquiryRequest,
+  inquiryResponse: InquiryResponse,
+  paymentVARequest: PaymentVARequest,
+  paymentVAResponse: ResponseStatus,
 });
 
 type Data = z.infer<typeof Data>;
 type State = z.infer<typeof State>;
 type InquiryRequest = z.infer<typeof InquiryRequest>;
 type InquiryResponse = z.infer<typeof InquiryResponse>;
+type PaymentVARequest = z.infer<typeof PaymentVARequest>;
+type ResponseStatus = z.infer<typeof ResponseStatus>;
 
 type Dispatcher = {
   next: () => void;
   back: () => void;
   reset: () => void;
+  setStep: (step: number) => void;
   setToken: (token: string) => void;
   setLoading: (loading: boolean) => void;
   setJenisID: (jenisID: number) => void;
   setNoIdentitas: (noIdentitas: string) => void;
   setNoVA: (noVA: string) => void;
+  setKodeInstansi: (kodeInstansi: string) => void;
+  setKodeProduk: (kodeProduk: string) => void;
+  setKodeKantorTx: (kodeKantorTx: string) => void;
+  setKodeBank: (kodeBank: string) => void;
+  setStan: (stan: string) => void;
+  setRrn: (rrn: string) => void;
+  setModeTransaksi: (modeTransaksi: string) => void;
   setInquiryResponse: (inquiryResponse: InquiryResponse) => void;
+  setPaymentVARequest: (paymentVARequest: PaymentVARequest) => void;
+  setPaymentVAResponse: (responseStatus: ResponseStatus) => void;
+  toggleDebug: () => void;
 };
 
 const AppContextState = createContext<State | null>(null);
@@ -84,6 +115,24 @@ const reducer = (draft: State, action: Action) => {
     case "NO_VA":
       draft.inquiryRequest.nomorVA = action.payload;
       return;
+    case "KODE_BANK":
+      draft.inquiryRequest.kodeBank = action.payload;
+      return;
+    case "KODE_PRODUK":
+      draft.inquiryRequest.kodeProduk = action.payload;
+      return;
+    case "KODE_INSTANSI":
+      draft.inquiryRequest.kodeInstansi = action.payload;
+      return;
+    case "KODE_KANTOR_TX":
+      draft.inquiryRequest.kodeKantorTx = action.payload;
+      return;
+    case "STAN":
+      draft.inquiryRequest.stan = action.payload;
+      return;
+    case "RRN":
+      draft.inquiryRequest.rrn = action.payload;
+      return;
     case "NEXT":
       if (draft.step >= draft.maxStep) return;
       if (draft.token === "") return;
@@ -95,19 +144,30 @@ const reducer = (draft: State, action: Action) => {
       draft.step = draft.step - 1;
       return;
     case "RESET":
-      draft.step = 1;
-      draft.jenisID = 1;
-      draft.inquiryRequest.nomorVA = "";
-      draft.inquiryRequest.nomorIdentitas = "";
+      window.location.reload();
       return;
     case "SET_INQUIRY_RESPONSE":
       draft.inquiryResponse = action.payload;
       return;
+    case "SET_PAYMENTVA_REQUEST":
+      draft.paymentVARequest = action.payload;
+      return;
+    case "SET_PAYMENTVA_RESPONSE":
+      draft.paymentVAResponse = action.payload;
+      return;
+    case "SET_MODE_TRANSAKSI":
+      draft.modeTransaksi = action.payload;
     case "SET_LOADING":
       draft.loading = action.payload;
       return;
     case "SET_TOKEN":
       draft.token = action.payload;
+      return;
+    case "SET_STEP":
+      draft.step = action.payload;
+      return;
+    case "TOGGLE_DEBUG":
+      draft.debug = !draft.debug;
       return;
     default:
       return;
@@ -119,12 +179,13 @@ interface Props {
 }
 
 const initialState: State = {
-  debug: true,
+  debug: false,
   token: "",
-  maxStep: 3,
+  maxStep: 5,
   step: 1,
   loading: true,
   jenisID: 1,
+  modeTransaksi: "1",
   inquiryRequest: InquiryRequest.parse({ nomorVA: "", nomorIdentitas: "" }),
   inquiryResponse: {
     nomorVA: "",
@@ -138,6 +199,11 @@ const initialState: State = {
     status: "",
     rrn: "",
   },
+  paymentVARequest: PaymentVARequest.parse({ nomorVA: "", nominalVA: "" }),
+  paymentVAResponse: {
+    message: "",
+    status: "",
+  },
 };
 
 export const AppContextProvider = (props: Props) => {
@@ -149,15 +215,33 @@ export const AppContextProvider = (props: Props) => {
     setNoIdentitas: (noIdentitas: string) =>
       dispatch({ type: "NO_IDENTITAS", payload: noIdentitas }),
     setNoVA: (noVA: string) => dispatch({ type: "NO_VA", payload: noVA }),
+    setKodeBank: (kodeBank: string) =>
+      dispatch({ type: "KODE_BANK", payload: kodeBank }),
+    setKodeInstansi: (kodeInstansi: string) =>
+      dispatch({ type: "KODE_INSTANSI", payload: kodeInstansi }),
+    setKodeKantorTx: (kodeKantorTx: string) =>
+      dispatch({ type: "KODE_KANTOR_TX", payload: kodeKantorTx }),
+    setKodeProduk: (kodeProduk: string) =>
+      dispatch({ type: "KODE_PRODUK", payload: kodeProduk }),
+    setRrn: (rrn: string) => dispatch({ type: "RRN", payload: rrn }),
+    setStan: (stan: string) => dispatch({ type: "STAN", payload: stan }),
     setLoading: (loading: boolean) =>
       dispatch({ type: "SET_LOADING", payload: loading }),
     setToken: (token: string) =>
       dispatch({ type: "SET_TOKEN", payload: token }),
     setInquiryResponse: (inquiryResponse: InquiryResponse) =>
       dispatch({ type: "SET_INQUIRY_RESPONSE", payload: inquiryResponse }),
+    setPaymentVARequest: (paymentVARequest: PaymentVARequest) =>
+      dispatch({ type: "SET_PAYMENTVA_REQUEST", payload: paymentVARequest }),
+    setPaymentVAResponse: (paymentVAResponse: ResponseStatus) =>
+      dispatch({ type: "SET_PAYMENTVA_RESPONSE", payload: paymentVAResponse }),
+    setModeTransaksi: (modeTransaksi: string) =>
+      dispatch({ type: "SET_MODE_TRANSAKSI", payload: modeTransaksi }),
     next: () => dispatch({ type: "NEXT", payload: null }),
     back: () => dispatch({ type: "BACK", payload: null }),
+    setStep: (step: number) => dispatch({ type: "SET_STEP", payload: step }),
     reset: () => dispatch({ type: "RESET", payload: null }),
+    toggleDebug: () => dispatch({ type: "TOGGLE_DEBUG", payload: null }),
   };
 
   return (
