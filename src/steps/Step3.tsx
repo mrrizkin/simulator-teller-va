@@ -125,7 +125,7 @@ const Step3 = () => {
                         SRC Fee {data.rekeningFeeSumber}
                       </span>
                       <span className="text-xs font-bold text-gray-500">
-                        TRX {data.kodeTransaksi}
+                        TRX {data.kodeTransaksi == 'K' ? 'Setor' : 'Tarik'}
                       </span>
                     </div>
                     <span
