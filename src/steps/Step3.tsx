@@ -1,5 +1,4 @@
 import { ChangeEvent, FormEvent, useState } from "react";
-import axios from "axios";
 
 import {
   useAppState,
@@ -12,9 +11,8 @@ import { rupiah } from "../helpers/formatters";
 import Status from "./Status";
 
 const Step3 = () => {
-  const { inquiryRequest, token, inquiryResponse, paymentVARequest } =
-    useAppState();
-  const { back, next, setLoading, setPaymentVARequest, setPaymentVAResponse } =
+  const { inquiryRequest, inquiryResponse } = useAppState();
+  const { back, next, setLoading, setPaymentVARequest, setModeTransaksi } =
     useAppDispatch();
   const [selectedPayment, setSelectedPayment] = useState("0");
 
@@ -31,9 +29,15 @@ const Step3 = () => {
 
   function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    setLoading(true);
 
     if (response.success) {
+      if (response.data.additionalData.length <= 0) {
+        alert("No payment virtual account available");
+        return;
+      }
+
+      setLoading(true);
+
       setPaymentVARequest({
         nomorVA:
           response.data.additionalData[parseInt(selectedPayment)].nomorVA,
@@ -47,25 +51,12 @@ const Step3 = () => {
         rrn: inquiryRequest.rrn,
       });
 
-      axios
-        .post(
-          `${import.meta.env.VITE_API_URL}/external/paymentVA`,
-          paymentVARequest,
-          { headers: { Authorization: `Bearer ${token}` } }
-        )
-        .then((res: any) => {
-          setTimeout(() => {
-            setPaymentVAResponse(res.data);
-            setLoading(false);
-            next();
-          }, 1500);
-        })
-        .catch((e: any) => {
-          setTimeout(() => {
-            console.warn(e);
-            setLoading(false);
-          }, 1500);
-        });
+      setModeTransaksi(
+        response.data.additionalData[parseInt(selectedPayment)].jenisTransaksi
+      );
+
+      next();
+      setLoading(false);
     } else {
       setTimeout(() => {
         console.warn("Can't submit if inquiry response is invalid");
@@ -144,7 +135,7 @@ const Step3 = () => {
                           : "bg-gray-500"
                       } px-2 py-1 rounded-tr-md rounded-bl-md text-xs`}
                     >
-                      {data.jenisTransaksi}
+                      {data.jenisTransaksi === "1" ? "close" : "open"}
                     </span>
                   </span>
                 </label>
