@@ -96,6 +96,94 @@ const Step4 = () => {
           modeTransaksi === "1" ? "opacity-50 bg-gray-700" : ""
         }`}
       />
+      {showFormDetail && (
+        <div className="text-gray-400 mt-4">
+          <div className="flex gap-8 py-4">
+            <div className="flex-1">
+              <Label>[VA Number]</Label>
+              <TextInput
+                value={virtual_account(fundTransferRequest.nomorVA)}
+                onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                  setFundTransferRequest({
+                    ...fundTransferRequest,
+                    nomorVA: onlydigit(e.currentTarget.value),
+                  })
+                }
+                className="border-3 border-gray-500 p-1"
+              />
+            </div>
+            <div className="flex-1">
+              <Label>[Fee]</Label>
+              <TextInput
+                value={currency(fundTransferRequest.nominal)}
+                onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                  setFundTransferRequest({
+                    ...fundTransferRequest,
+                    nominal: onlydigit(e.currentTarget.value),
+                  })
+                }
+                className="border-3 border-gray-500 p-1"
+              />
+            </div>
+          </div>
+          <div className="flex gap-8 py-4">
+            <div className="flex-1">
+              <Label>[From Account]</Label>
+              <TextInput
+                value={fundTransferRequest.fromAccount}
+                onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                  setFundTransferRequest({
+                    ...fundTransferRequest,
+                    fromAccount: e.currentTarget.value,
+                  })
+                }
+                className="border-3 border-gray-500 p-1"
+              />
+            </div>
+            <div className="flex-1">
+              <Label>[Detail]</Label>
+              <TextInput
+                value={fundTransferRequest.keterangan}
+                onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                  setFundTransferRequest({
+                    ...fundTransferRequest,
+                    keterangan: e.currentTarget.value,
+                  })
+                }
+                className="border-3 border-gray-500 p-1"
+              />
+            </div>
+          </div>
+          <div className="flex gap-8 py-4">
+            <div className="flex-1">
+              <Label>[stan]</Label>
+              <TextInput
+                value={fundTransferRequest.stan}
+                onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                  setFundTransferRequest({
+                    ...fundTransferRequest,
+                    stan: e.currentTarget.value,
+                  })
+                }
+                className="border-3 border-gray-500 p-1"
+              />
+            </div>
+            <div className="flex-1">
+              <Label>[rrn]</Label>
+              <TextInput
+                value={fundTransferRequest.rrn}
+                onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                  setFundTransferRequest({
+                    ...fundTransferRequest,
+                    rrn: e.currentTarget.value,
+                  })
+                }
+                className="border-3 border-gray-500 p-1"
+              />
+            </div>
+          </div>
+        </div>
+      )}
       <div className="text-xs mt-4 flex gap-x-2 items-center">
         <input
           type="checkbox"
