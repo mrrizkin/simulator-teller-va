@@ -22,9 +22,7 @@ const Status = (props: z.infer<typeof ResponseStatus>) => {
           <>
             status code: <span>{status}</span>,{" "}
             <span
-              className={
-                message === "Approved" ? "text-green-500" : "text-red-500"
-              }
+              className={status === "00" ? "text-green-500" : "text-red-500"}
             >
               {message}
             </span>

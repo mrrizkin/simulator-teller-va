@@ -17,23 +17,41 @@ import Loading from "./components/Loading";
 
 const App = () => {
   const { loading, debug } = useAppState();
-  const { setLoading, setToken, toggleDebug } = useAppDispatch();
+  const { setLoading, setExternalToken, setInternalToken, toggleDebug } =
+    useAppDispatch();
 
   useEffect(() => {
     axios
-      .post(`${import.meta.env.VITE_API_URL}/external/auth`, {
+      .post(`${import.meta.env.VITE_API_EXTERNAL}/external/auth`, {
         username: "su",
         password: "rahasia",
       })
       .then((res) => {
-        setTimeout(() => {
-          setToken(res.data.token);
-          setLoading(false);
-        }, 1500);
+        axios
+          .post(`${import.meta.env.VITE_API_INTERNAL}/auth`, {
+            username: "client",
+            password: "rahasia",
+          })
+          .then((respond) => {
+            setTimeout(() => {
+              setInternalToken(respond.data.token);
+              setExternalToken(res.data.token);
+              setLoading(false);
+            }, 1500);
+          })
+          .catch((e) => {
+            setTimeout(() => {
+              console.warn(e);
+              setExternalToken(res.data.token);
+              alert("Initializing failed");
+              setLoading(false);
+            }, 1500);
+          });
       })
       .catch((e) => {
         setTimeout(() => {
           console.warn(e);
+          alert("Initializing failed");
           setLoading(false);
         }, 1500);
       });
@@ -63,8 +81,9 @@ const App = () => {
 };
 
 const HandleStep = () => {
-  const { step, token } = useAppState();
-  if (!token) return <Refresh />;
+  const { step, internalToken, externalToken } = useAppState();
+  if (!externalToken) return <Refresh />;
+  if (!internalToken) return <Refresh />;
   switch (step) {
     case 1:
       return <Step1 />;

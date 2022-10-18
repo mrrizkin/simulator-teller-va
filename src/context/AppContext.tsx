@@ -47,6 +47,16 @@ export const PaymentVARequest = z.object({
   rrn: z.string().default("110480000001"),
 });
 
+export const FundTransferRequest = z.object({
+  transDateTime: z.string(),
+  fromAccount: z.string(),
+  nominal: z.string(),
+  nomorVA: z.string(),
+  keterangan: z.string(),
+  stan: z.string(),
+  rrn: z.string(),
+});
+
 export const ResponseStatus = z.object({
   message: z.string(),
   status: z.string(),
@@ -54,7 +64,8 @@ export const ResponseStatus = z.object({
 
 const State = z.object({
   debug: z.boolean().default(true),
-  token: z.string().default(""),
+  internalToken: z.string().default(""),
+  externalToken: z.string().default(""),
   maxStep: z.number().default(5),
   step: z.number().default(1),
   loading: z.boolean().default(true),
@@ -64,6 +75,8 @@ const State = z.object({
   inquiryResponse: InquiryResponse,
   paymentVARequest: PaymentVARequest,
   paymentVAResponse: ResponseStatus,
+  fundTransferRequest: FundTransferRequest,
+  fundTransferResponse: ResponseStatus,
 });
 
 type Data = z.infer<typeof Data>;
@@ -71,6 +84,7 @@ type State = z.infer<typeof State>;
 type InquiryRequest = z.infer<typeof InquiryRequest>;
 type InquiryResponse = z.infer<typeof InquiryResponse>;
 type PaymentVARequest = z.infer<typeof PaymentVARequest>;
+type FundTransferRequest = z.infer<typeof FundTransferRequest>;
 type ResponseStatus = z.infer<typeof ResponseStatus>;
 
 type Dispatcher = {
@@ -78,7 +92,8 @@ type Dispatcher = {
   back: () => void;
   reset: () => void;
   setStep: (step: number) => void;
-  setToken: (token: string) => void;
+  setExternalToken: (token: string) => void;
+  setInternalToken: (token: string) => void;
   setLoading: (loading: boolean) => void;
   setJenisID: (jenisID: number) => void;
   setNoIdentitas: (noIdentitas: string) => void;
@@ -93,6 +108,8 @@ type Dispatcher = {
   setInquiryResponse: (inquiryResponse: InquiryResponse) => void;
   setPaymentVARequest: (paymentVARequest: PaymentVARequest) => void;
   setPaymentVAResponse: (responseStatus: ResponseStatus) => void;
+  setFundTransferRequest: (fundTransferRequest: FundTransferRequest) => void;
+  setFundTransferResponse: (responseStatus: ResponseStatus) => void;
   toggleDebug: () => void;
 };
 
@@ -135,12 +152,14 @@ const reducer = (draft: State, action: Action) => {
       return;
     case "NEXT":
       if (draft.step >= draft.maxStep) return;
-      if (draft.token === "") return;
+      if (draft.internalToken === "") return;
+      if (draft.externalToken === "") return;
       draft.step = draft.step + 1;
       return;
     case "BACK":
       if (draft.step <= 1) return;
-      if (draft.token === "") return;
+      if (draft.internalToken === "") return;
+      if (draft.externalToken === "") return;
       draft.step = draft.step - 1;
       return;
     case "RESET":
@@ -157,11 +176,20 @@ const reducer = (draft: State, action: Action) => {
       return;
     case "SET_MODE_TRANSAKSI":
       draft.modeTransaksi = action.payload;
+    case "SET_FUNDTRANSFER_REQUEST":
+      draft.fundTransferRequest = action.payload;
+      return;
+    case "SET_FUNDTRANSFER_RESPONSE":
+      draft.fundTransferResponse = action.payload;
+      return;
     case "SET_LOADING":
       draft.loading = action.payload;
       return;
-    case "SET_TOKEN":
-      draft.token = action.payload;
+    case "SET_EXTERNAL_TOKEN":
+      draft.externalToken = action.payload;
+      return;
+    case "SET_INTERNAL_TOKEN":
+      draft.internalToken = action.payload;
       return;
     case "SET_STEP":
       draft.step = action.payload;
@@ -180,7 +208,8 @@ interface Props {
 
 const initialState: State = {
   debug: false,
-  token: "",
+  externalToken: "",
+  internalToken: "",
   maxStep: 5,
   step: 1,
   loading: true,
@@ -201,6 +230,19 @@ const initialState: State = {
   },
   paymentVARequest: PaymentVARequest.parse({ nomorVA: "", nominalVA: "" }),
   paymentVAResponse: {
+    message: "",
+    status: "",
+  },
+  fundTransferRequest: {
+    transDateTime: Date.now().toString(),
+    fromAccount: "",
+    nominal: "",
+    nomorVA: "",
+    keterangan: "pembayaran",
+    stan: "010595",
+    rrn: "010480000001",
+  },
+  fundTransferResponse: {
     message: "",
     status: "",
   },
@@ -227,8 +269,10 @@ export const AppContextProvider = (props: Props) => {
     setStan: (stan: string) => dispatch({ type: "STAN", payload: stan }),
     setLoading: (loading: boolean) =>
       dispatch({ type: "SET_LOADING", payload: loading }),
-    setToken: (token: string) =>
-      dispatch({ type: "SET_TOKEN", payload: token }),
+    setExternalToken: (token: string) =>
+      dispatch({ type: "SET_EXTERNAL_TOKEN", payload: token }),
+    setInternalToken: (token: string) =>
+      dispatch({ type: "SET_INTERNAL_TOKEN", payload: token }),
     setInquiryResponse: (inquiryResponse: InquiryResponse) =>
       dispatch({ type: "SET_INQUIRY_RESPONSE", payload: inquiryResponse }),
     setPaymentVARequest: (paymentVARequest: PaymentVARequest) =>
@@ -237,6 +281,16 @@ export const AppContextProvider = (props: Props) => {
       dispatch({ type: "SET_PAYMENTVA_RESPONSE", payload: paymentVAResponse }),
     setModeTransaksi: (modeTransaksi: string) =>
       dispatch({ type: "SET_MODE_TRANSAKSI", payload: modeTransaksi }),
+    setFundTransferRequest: (fundTransferRequest: FundTransferRequest) =>
+      dispatch({
+        type: "SET_FUNDTRANSFER_REQUEST",
+        payload: fundTransferRequest,
+      }),
+    setFundTransferResponse: (fundTransferResponse: ResponseStatus) =>
+      dispatch({
+        type: "SET_FUNDTRANSFER_RESPONSE",
+        payload: fundTransferResponse,
+      }),
     next: () => dispatch({ type: "NEXT", payload: null }),
     back: () => dispatch({ type: "BACK", payload: null }),
     setStep: (step: number) => dispatch({ type: "SET_STEP", payload: step }),
