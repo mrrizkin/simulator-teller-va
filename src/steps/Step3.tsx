@@ -116,7 +116,7 @@ const Step3 = () => {
           </table>
           <div className="flex gap-4 flex-wrap justify-center my-4">
             {response.data.additionalData.map((data, index) => (
-              <div key={index}>
+              <div key={index} className="max-w-xs w-full">
                 <label className="relative">
                   <input
                     name="plan"
@@ -127,7 +127,7 @@ const Step3 = () => {
                     onChange={handleRadioChange}
                   />
 
-                  <span className="flex flex-col p-4 cursor-pointer rounded-md border-3 select-none border-gray-500 w-72">
+                  <span className="flex flex-col p-4 cursor-pointer rounded-md border-3 select-none border-gray-500 w-full">
                     <span className="text-sm text-gray-300">
                       {virtual_account(data.nomorVA)}
                     </span>
@@ -150,11 +150,10 @@ const Step3 = () => {
                       </span>
                     </div>
                     <span
-                      className={`absolute top-0 right-0 ${
-                        isSelected(index.toString())
-                          ? "bg-blue-500"
-                          : "bg-gray-500"
-                      } px-2 py-1 rounded-tr-md rounded-bl-md text-xs`}
+                      className={`absolute top-0 right-0 ${isSelected(index.toString())
+                        ? "bg-blue-500"
+                        : "bg-gray-500"
+                        } px-2 py-1 rounded-tr-md rounded-bl-md text-xs`}
                     >
                       {data.jenisTransaksi === "1" ? "close" : "open"}
                     </span>
