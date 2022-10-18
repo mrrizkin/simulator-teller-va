@@ -22,6 +22,7 @@ const Step4 = () => {
     setFundTransferRequest,
     setFundTransferResponse,
     setLoading,
+    setInternalToken,
   } = useAppDispatch();
 
   function handleChange(e: ChangeEvent<HTMLInputElement>) {
@@ -53,6 +54,7 @@ const Step4 = () => {
         { headers: { Authorization: `Bearer ${externalToken}` } }
       )
       .then((res: any) => {
+        getInternalToken(3);
         axios
           .post(
             `${import.meta.env.VITE_API_INTERNAL}/fundtransfer`,
@@ -87,6 +89,33 @@ const Step4 = () => {
           alert("Payment VA failed");
           setLoading(false);
         }, 1500);
+      });
+  }
+
+  function getInternalToken(retry: number) {
+    axios
+      .post(`${import.meta.env.VITE_API_INTERNAL}/auth`, {
+        username: import.meta.env.VITE_USER_INTERNAL,
+        password: import.meta.env.VITE_PASS_INTERNAL,
+      })
+      .then((respond) => {
+        setTimeout(() => {
+          setInternalToken(respond.data.token);
+          setLoading(false);
+        }, 1500);
+        return;
+      })
+      .catch((e) => {
+        if (retry > 0) {
+          getInternalToken(retry - 1);
+          return;
+        }
+        setTimeout(() => {
+          console.warn(e);
+          alert("Failed get internal token");
+          setLoading(false);
+        }, 1500);
+        return;
       });
   }
 

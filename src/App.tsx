@@ -23,14 +23,14 @@ const App = () => {
   useEffect(() => {
     axios
       .post(`${import.meta.env.VITE_API_EXTERNAL}/external/auth`, {
-        username: "su",
-        password: "rahasia",
+        username: import.meta.env.VITE_USER_EXTERNAL,
+        password: import.meta.env.VITE_PASS_EXTERNAL,
       })
       .then((res) => {
         axios
           .post(`${import.meta.env.VITE_API_INTERNAL}/auth`, {
-            username: "client",
-            password: "rahasia",
+            username: import.meta.env.VITE_USER_INTERNAL,
+            password: import.meta.env.VITE_PASS_INTERNAL,
           })
           .then((respond) => {
             setTimeout(() => {
