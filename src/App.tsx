@@ -34,6 +34,7 @@ const App = () => {
       .catch((e) => {
         setTimeout(() => {
           console.warn(e);
+          alert(e.response.data.message);
           setLoading(false);
         }, 1500);
       });

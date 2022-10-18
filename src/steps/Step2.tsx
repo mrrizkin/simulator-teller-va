@@ -47,6 +47,7 @@ const Step2 = () => {
       .catch((e: any) => {
         setTimeout(() => {
           console.warn(e);
+          alert(e.response.data.message);
           setLoading(false);
         }, 1500);
       });

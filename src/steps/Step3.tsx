@@ -12,8 +12,14 @@ import Status from "./Status";
 
 const Step3 = () => {
   const { inquiryRequest, inquiryResponse } = useAppState();
-  const { back, next, setLoading, setPaymentVARequest, setModeTransaksi } =
-    useAppDispatch();
+  const {
+    back,
+    next,
+    setLoading,
+    setPaymentVARequest,
+    setModeTransaksi,
+    setFundTransferRequest,
+  } = useAppDispatch();
   const [selectedPayment, setSelectedPayment] = useState("0");
 
   let response = InquiryResponse.safeParse(inquiryResponse);
@@ -54,6 +60,20 @@ const Step3 = () => {
       setModeTransaksi(
         response.data.additionalData[parseInt(selectedPayment)].jenisTransaksi
       );
+
+      setFundTransferRequest({
+        keterangan: "",
+        nominal:
+          response.data.additionalData[parseInt(selectedPayment)].nominalFee,
+        fromAccount:
+          response.data.additionalData[parseInt(selectedPayment)]
+            .rekeningSumber,
+        nomorVA:
+          response.data.additionalData[parseInt(selectedPayment)].nomorVA,
+        rrn: inquiryRequest.rrn,
+        stan: inquiryRequest.stan,
+        transDateTime: Date.now().toString(),
+      });
 
       next();
       setLoading(false);
@@ -125,7 +145,7 @@ const Step3 = () => {
                         SRC Fee {data.rekeningFeeSumber}
                       </span>
                       <span className="text-xs font-bold text-gray-500">
-                        TRX {data.kodeTransaksi == 'K' ? 'Setor' : 'Tarik'}
+                        TRX {data.kodeTransaksi == "K" ? "Setor" : "Tarik"}
                       </span>
                     </div>
                     <span

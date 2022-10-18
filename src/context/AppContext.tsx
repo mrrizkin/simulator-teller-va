@@ -47,6 +47,16 @@ export const PaymentVARequest = z.object({
   rrn: z.string().default("110480000001"),
 });
 
+export const FundTransferRequest = z.object({
+  transDateTime: z.string(),
+  fromAccount: z.string(),
+  nominal: z.string(),
+  nomorVA: z.string(),
+  keterangan: z.string(),
+  stan: z.string(),
+  rrn: z.string(),
+});
+
 export const ResponseStatus = z.object({
   message: z.string(),
   status: z.string(),
@@ -64,6 +74,8 @@ const State = z.object({
   inquiryResponse: InquiryResponse,
   paymentVARequest: PaymentVARequest,
   paymentVAResponse: ResponseStatus,
+  fundTransferRequest: FundTransferRequest,
+  fundTransferResponse: ResponseStatus,
 });
 
 type Data = z.infer<typeof Data>;
@@ -71,6 +83,7 @@ type State = z.infer<typeof State>;
 type InquiryRequest = z.infer<typeof InquiryRequest>;
 type InquiryResponse = z.infer<typeof InquiryResponse>;
 type PaymentVARequest = z.infer<typeof PaymentVARequest>;
+type FundTransferRequest = z.infer<typeof FundTransferRequest>;
 type ResponseStatus = z.infer<typeof ResponseStatus>;
 
 type Dispatcher = {
@@ -93,6 +106,8 @@ type Dispatcher = {
   setInquiryResponse: (inquiryResponse: InquiryResponse) => void;
   setPaymentVARequest: (paymentVARequest: PaymentVARequest) => void;
   setPaymentVAResponse: (responseStatus: ResponseStatus) => void;
+  setFundTransferRequest: (fundTransferRequest: FundTransferRequest) => void;
+  setFundTransferResponse: (responseStatus: ResponseStatus) => void;
   toggleDebug: () => void;
 };
 
@@ -157,6 +172,12 @@ const reducer = (draft: State, action: Action) => {
       return;
     case "SET_MODE_TRANSAKSI":
       draft.modeTransaksi = action.payload;
+    case "SET_FUNDTRANSFER_REQUEST":
+      draft.fundTransferRequest = action.payload;
+      return;
+    case "SET_FUNDTRANSFER_RESPONSE":
+      draft.fundTransferResponse = action.payload;
+      return;
     case "SET_LOADING":
       draft.loading = action.payload;
       return;
@@ -204,6 +225,19 @@ const initialState: State = {
     message: "",
     status: "",
   },
+  fundTransferRequest: {
+    transDateTime: Date.now().toString(),
+    fromAccount: "",
+    nominal: "",
+    nomorVA: "",
+    keterangan: "pembayaran",
+    stan: "010595",
+    rrn: "010480000001",
+  },
+  fundTransferResponse: {
+    message: "",
+    status: "",
+  },
 };
 
 export const AppContextProvider = (props: Props) => {
@@ -237,6 +271,16 @@ export const AppContextProvider = (props: Props) => {
       dispatch({ type: "SET_PAYMENTVA_RESPONSE", payload: paymentVAResponse }),
     setModeTransaksi: (modeTransaksi: string) =>
       dispatch({ type: "SET_MODE_TRANSAKSI", payload: modeTransaksi }),
+    setFundTransferRequest: (fundTransferRequest: FundTransferRequest) =>
+      dispatch({
+        type: "SET_FUNDTRANSFER_REQUEST",
+        payload: fundTransferRequest,
+      }),
+    setFundTransferResponse: (fundTransferResponse: ResponseStatus) =>
+      dispatch({
+        type: "SET_FUNDTRANSFER_RESPONSE",
+        payload: fundTransferResponse,
+      }),
     next: () => dispatch({ type: "NEXT", payload: null }),
     back: () => dispatch({ type: "BACK", payload: null }),
     setStep: (step: number) => dispatch({ type: "SET_STEP", payload: step }),
