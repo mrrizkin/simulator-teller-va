@@ -8,7 +8,7 @@ import { Label, TextInput } from "../components/Input";
 
 const Step2 = () => {
   const [showFormDetail, setShowFormDetail] = useState(false);
-  const { token, jenisID, inquiryRequest } = useAppState();
+  const { externalToken, jenisID, inquiryRequest } = useAppState();
   const {
     setNoVA,
     setNoIdentitas,
@@ -37,9 +37,9 @@ const Step2 = () => {
 
     axios
       .post(
-        `${import.meta.env.VITE_API_URL}/external/inquiryVA`,
+        `${import.meta.env.VITE_API_EXTERNAL}/external/inquiryVA`,
         inquiryRequest,
-        { headers: { Authorization: `Bearer ${token}` } }
+        { headers: { Authorization: `Bearer ${externalToken}` } }
       )
       .then((res: any) => {
         setTimeout(() => {
@@ -51,7 +51,7 @@ const Step2 = () => {
       .catch((e: any) => {
         setTimeout(() => {
           console.warn(e);
-          alert(e.response.data.message);
+          alert("Error getting data");
           setLoading(false);
         }, 1500);
       });

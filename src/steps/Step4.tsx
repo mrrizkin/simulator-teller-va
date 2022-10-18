@@ -6,8 +6,13 @@ import { currency, onlydigit, virtual_account } from "../helpers/masking";
 
 const Step4 = () => {
   const [showFormDetail, setShowFormDetail] = useState(true);
-  const { modeTransaksi, paymentVARequest, token, fundTransferRequest } =
-    useAppState();
+  const {
+    modeTransaksi,
+    paymentVARequest,
+    externalToken,
+    internalToken,
+    fundTransferRequest,
+  } = useAppState();
   const {
     next,
     back,
@@ -43,16 +48,18 @@ const Step4 = () => {
   function makeRequest() {
     axios
       .post(
-        `${import.meta.env.VITE_API_URL}/external/paymentVA`,
+        `${import.meta.env.VITE_API_EXTERNAL}/external/paymentVA`,
         paymentVARequest,
-        { headers: { Authorization: `Bearer ${token}` } }
+        { headers: { Authorization: `Bearer ${externalToken}` } }
       )
       .then((res: any) => {
         axios
           .post(
-            `${import.meta.env.VITE_API_URL}/fundtransfer`,
+            `${import.meta.env.VITE_API_INTERNAL}/fundtransfer`,
             fundTransferRequest,
-            { headers: { Authorization: `Bearer ${token}` } }
+            {
+              headers: { Authorization: `Bearer ${internalToken}` },
+            }
           )
           .then((response) => {
             setTimeout(() => {
@@ -67,7 +74,8 @@ const Step4 = () => {
             setTimeout(() => {
               setPaymentVAResponse(res.data);
               setInquiryResponse(res.data);
-              alert(`Fund Transfer ${e.response.data.message}`);
+              console.warn(e);
+              alert("Fund Transfer fee failed");
               setLoading(false);
               next();
             }, 1500);
@@ -76,7 +84,7 @@ const Step4 = () => {
       .catch((e: any) => {
         setTimeout(() => {
           console.warn(e);
-          alert(e.response.data.message);
+          alert("Payment VA failed");
           setLoading(false);
         }, 1500);
       });

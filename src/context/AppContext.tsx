@@ -64,7 +64,8 @@ export const ResponseStatus = z.object({
 
 const State = z.object({
   debug: z.boolean().default(true),
-  token: z.string().default(""),
+  internalToken: z.string().default(""),
+  externalToken: z.string().default(""),
   maxStep: z.number().default(5),
   step: z.number().default(1),
   loading: z.boolean().default(true),
@@ -91,7 +92,8 @@ type Dispatcher = {
   back: () => void;
   reset: () => void;
   setStep: (step: number) => void;
-  setToken: (token: string) => void;
+  setExternalToken: (token: string) => void;
+  setInternalToken: (token: string) => void;
   setLoading: (loading: boolean) => void;
   setJenisID: (jenisID: number) => void;
   setNoIdentitas: (noIdentitas: string) => void;
@@ -150,12 +152,14 @@ const reducer = (draft: State, action: Action) => {
       return;
     case "NEXT":
       if (draft.step >= draft.maxStep) return;
-      if (draft.token === "") return;
+      if (draft.internalToken === "") return;
+      if (draft.externalToken === "") return;
       draft.step = draft.step + 1;
       return;
     case "BACK":
       if (draft.step <= 1) return;
-      if (draft.token === "") return;
+      if (draft.internalToken === "") return;
+      if (draft.externalToken === "") return;
       draft.step = draft.step - 1;
       return;
     case "RESET":
@@ -181,8 +185,11 @@ const reducer = (draft: State, action: Action) => {
     case "SET_LOADING":
       draft.loading = action.payload;
       return;
-    case "SET_TOKEN":
-      draft.token = action.payload;
+    case "SET_EXTERNAL_TOKEN":
+      draft.externalToken = action.payload;
+      return;
+    case "SET_INTERNAL_TOKEN":
+      draft.internalToken = action.payload;
       return;
     case "SET_STEP":
       draft.step = action.payload;
@@ -201,7 +208,8 @@ interface Props {
 
 const initialState: State = {
   debug: false,
-  token: "",
+  externalToken: "",
+  internalToken: "",
   maxStep: 5,
   step: 1,
   loading: true,
@@ -261,8 +269,10 @@ export const AppContextProvider = (props: Props) => {
     setStan: (stan: string) => dispatch({ type: "STAN", payload: stan }),
     setLoading: (loading: boolean) =>
       dispatch({ type: "SET_LOADING", payload: loading }),
-    setToken: (token: string) =>
-      dispatch({ type: "SET_TOKEN", payload: token }),
+    setExternalToken: (token: string) =>
+      dispatch({ type: "SET_EXTERNAL_TOKEN", payload: token }),
+    setInternalToken: (token: string) =>
+      dispatch({ type: "SET_INTERNAL_TOKEN", payload: token }),
     setInquiryResponse: (inquiryResponse: InquiryResponse) =>
       dispatch({ type: "SET_INQUIRY_RESPONSE", payload: inquiryResponse }),
     setPaymentVARequest: (paymentVARequest: PaymentVARequest) =>
