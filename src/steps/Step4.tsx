@@ -2,6 +2,7 @@ import { ChangeEvent, FormEvent, useState } from "react";
 import { useAppState, useAppDispatch } from "../context/AppContext";
 import { TextInput, Label } from "../components/Input";
 import axios from "axios";
+import { currency, onlydigit, virtual_account } from "../helpers/masking";
 
 const Step4 = () => {
   const [showFormDetail, setShowFormDetail] = useState(true);
@@ -21,7 +22,7 @@ const Step4 = () => {
   function handleChange(e: ChangeEvent<HTMLInputElement>) {
     setPaymentVARequest({
       ...paymentVARequest,
-      nominalVA: e.currentTarget.value,
+      nominalVA: onlydigit(e.currentTarget.value),
     });
   }
 
@@ -89,7 +90,7 @@ const Step4 = () => {
     <form onSubmit={handleSubmit} className="max-w-xl w-full">
       <Label className="text-xl">[Input Nominal]</Label>
       <TextInput
-        value={paymentVARequest.nominalVA}
+        value={currency(paymentVARequest.nominalVA)}
         onChange={handleChange}
         disabled={modeTransaksi === "1"}
         className={`border-3 border-gray-500 p-2 ${

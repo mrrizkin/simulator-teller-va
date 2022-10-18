@@ -1,6 +1,8 @@
 import { ChangeEvent, FormEvent, useState } from "react";
 import axios from "axios";
 
+import { onlydigit, virtual_account } from "../helpers/masking";
+
 import { useAppDispatch, useAppState } from "../context/AppContext";
 import { Label, TextInput } from "../components/Input";
 
@@ -23,7 +25,9 @@ const Step2 = () => {
   } = useAppDispatch();
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) =>
-    jenisID === 1 ? setNoVA(e.target.value) : setNoIdentitas(e.target.value);
+    jenisID === 1
+      ? setNoVA(onlydigit(e.target.value))
+      : setNoIdentitas(onlydigit(e.target.value));
 
   function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -63,7 +67,7 @@ const Step2 = () => {
         <>
           <Label className="text-xl">[No. Virtual Account]</Label>
           <TextInput
-            value={inquiryRequest.nomorVA}
+            value={virtual_account(inquiryRequest.nomorVA)}
             onChange={handleChange}
             className="border-3 border-gray-500 p-2"
           />
@@ -72,7 +76,7 @@ const Step2 = () => {
         <>
           <Label className="text-xl">[No. Identity]</Label>
           <TextInput
-            value={inquiryRequest.nomorIdentitas}
+            value={virtual_account(inquiryRequest.nomorIdentitas)}
             onChange={handleChange}
             className="border-3 border-gray-500 p-2"
           />
