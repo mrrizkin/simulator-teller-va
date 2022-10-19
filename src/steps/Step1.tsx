@@ -16,13 +16,13 @@ const Step1 = () => {
       <div className="relative w-full flex justify-center gap-x-32 mt-24">
         <div
           onClick={jenis(1)}
-          className="flex justify-center items-center cursor-pointer w-[200px] h-[200px] bg-blue-500 text-2xl rounded-xl p-2 hover:bg-gradient-to-r from-cyan-500 to-fuchsia-500 "
+          className="flex justify-center items-center cursor-pointer w-[200px] h-[200px] bg-blue-500 text-2xl rounded-xl p-2 hover:bg-gradient-to-tr from-cyan-500 to-fuchsia-500 "
         >
           Virtual Account
         </div>
         <div
           onClick={jenis(2)}
-          className="flex justify-center items-center cursor-pointer w-[200px] h-[200px] bg-indigo-600 text-2xl rounded-xl"
+          className="flex justify-center items-center cursor-pointer w-[200px] h-[200px] bg-indigo-600 text-2xl rounded-xl hover:bg-gradient-to-br from-fuchsia-500 to-cyan-500"
         >
           Identity
         </div>
