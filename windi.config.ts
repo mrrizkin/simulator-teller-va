@@ -25,6 +25,15 @@ export default defineConfig({
           fontSize: "calc(10px + 2vmin)",
         },
       });
+      addUtilities({
+        ".btn-hacktober" : {
+          'border' : 'none',
+          'border-radius' : '2px',
+          'clip-path' : 'polygon(12px 0px, 100% 0px, 100% 72%, calc(100% - 12px) 100%, 0px 100%, 0px 12px)',
+          'padding' : '8px 18px',
+          'transition' : 'all 0.2s ease 0s'
+        }
+      });
     }),
   ],
 });
