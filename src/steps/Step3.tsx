@@ -87,7 +87,7 @@ const Step3 = () => {
   }
 
   return (
-    <div className="p-8 max-w-3xl w-full">
+    <div className="p-8 max-w-3xl w-full overflow-hidden">
       {response.success ? (
         <form onSubmit={handleSubmit}>
           <table>
