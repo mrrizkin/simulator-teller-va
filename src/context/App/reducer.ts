@@ -23,12 +23,6 @@ const reducer = (draft: State, action: Action) => {
     case "KODE_KANTOR_TX":
       draft.inquiryRequest.kodeKantorTx = action.payload;
       return;
-    case "STAN":
-      draft.inquiryRequest.stan = action.payload;
-      return;
-    case "RRN":
-      draft.inquiryRequest.rrn = action.payload;
-      return;
     case "NEXT":
       if (draft.step >= draft.maxStep) return;
       if (draft.internalToken === "") return;

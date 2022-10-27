@@ -1,9 +1,14 @@
 import { ChangeEvent, FormEvent, useState } from "react";
-import { useAppState, useAppDispatch } from "../context/App";
-import { TextInput, Label } from "../components/Input";
 import axios from "axios";
-import { currency, onlydigit, virtual_account } from "../helpers/masking";
+
+import { useAppState, useAppDispatch } from "../context/App";
+
+import { TextInput, Label } from "../components/Input";
 import HackButton from "../components/HackButton";
+import Show from "../components/Show";
+
+import { currency, onlydigit, virtual_account } from "../helpers/masking";
+import { getPaymentToken } from "../helpers/auth";
 
 const Step4 = () => {
   const [showFormDetail, setShowFormDetail] = useState(true);
@@ -94,11 +99,7 @@ const Step4 = () => {
   }
 
   function getInternalToken(retry: number) {
-    axios
-      .post(`${import.meta.env.VITE_API_INTERNAL}/auth`, {
-        username: import.meta.env.VITE_USER_INTERNAL,
-        password: import.meta.env.VITE_PASS_INTERNAL,
-      })
+    getPaymentToken()
       .then((respond) => {
         setTimeout(() => {
           setInternalToken(respond.data.token);
@@ -135,7 +136,7 @@ const Step4 = () => {
           modeTransaksi === "1" ? "opacity-50 bg-gray-700" : ""
         }`}
       />
-      {showFormDetail && (
+      <Show when={showFormDetail}>
         <div className="text-gray-400 mt-4">
           <div className="flex gap-8 py-4">
             <div className="flex-1">
@@ -193,36 +194,8 @@ const Step4 = () => {
               />
             </div>
           </div>
-          <div className="flex gap-8 py-4">
-            <div className="flex-1">
-              <Label>[stan]</Label>
-              <TextInput
-                value={fundTransferRequest.stan}
-                onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                  setFundTransferRequest({
-                    ...fundTransferRequest,
-                    stan: e.currentTarget.value,
-                  })
-                }
-                className="border-3 border-gray-500 p-1"
-              />
-            </div>
-            <div className="flex-1">
-              <Label>[rrn]</Label>
-              <TextInput
-                value={fundTransferRequest.rrn}
-                onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                  setFundTransferRequest({
-                    ...fundTransferRequest,
-                    rrn: e.currentTarget.value,
-                  })
-                }
-                className="border-3 border-gray-500 p-1"
-              />
-            </div>
-          </div>
         </div>
-      )}
+      </Show>
       <div className="text-xs mt-4 flex gap-x-2 items-center">
         <input
           type="checkbox"

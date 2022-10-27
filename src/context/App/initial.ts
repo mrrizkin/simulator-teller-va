@@ -1,4 +1,5 @@
-import { InquiryRequest, PaymentVARequest, State } from "./types";
+import { Inquiry, Payment, State } from "./types";
+import { number } from "../../helpers/random";
 
 const initialState: State = {
   debug: false,
@@ -9,10 +10,9 @@ const initialState: State = {
   loading: true,
   jenisID: 1,
   modeTransaksi: "1",
-  inquiryRequest: InquiryRequest.parse({ nomorVA: "", nomorIdentitas: "" }),
+  inquiryRequest: Inquiry.parse({ nomorVA: "", nomorIdentitas: "" }),
   inquiryResponse: {
     nomorVA: "",
-    stan: "",
     nominalTotal: "",
     nomorIdentitas: "",
     jumlahData: "",
@@ -20,9 +20,10 @@ const initialState: State = {
     message: "",
     namaVA: "",
     status: "",
-    rrn: "",
+    stan: number(6),
+    rrn: number(12),
   },
-  paymentVARequest: PaymentVARequest.parse({ nomorVA: "", nominalVA: "" }),
+  paymentVARequest: Payment.parse({ nomorVA: "", nominalVA: "" }),
   paymentVAResponse: {
     message: "",
     status: "",
@@ -33,8 +34,6 @@ const initialState: State = {
     nominal: "",
     nomorVA: "",
     keterangan: "pembayaran",
-    stan: "010595",
-    rrn: "010480000001",
   },
   fundTransferResponse: {
     message: "",

@@ -11,15 +11,13 @@ const Data = z.object({
   jenisTransaksi: z.string(),
 });
 
-export const InquiryRequest = z.object({
+export const Inquiry = z.object({
   nomorVA: z.string().default("0"),
   nomorIdentitas: z.string().default("0"),
   kodeInstansi: z.string().default("0"),
   kodeProduk: z.string().default("0"),
   kodeKantorTx: z.string().default("0"),
   kodeBank: z.string().default("0"),
-  stan: z.string().default("210595"),
-  rrn: z.string().default("110480000001"),
 });
 
 export const InquiryResponse = z.object({
@@ -35,24 +33,20 @@ export const InquiryResponse = z.object({
   rrn: z.string(),
 });
 
-export const PaymentVARequest = z.object({
+export const Payment = z.object({
   nomorVA: z.string().default("0"),
   nominalVA: z.string().default("0"),
   kodeTransaksi: z.string().default("0"),
   kodeKantorTx: z.string().default("K"),
   kodeBank: z.string().default("0"),
-  stan: z.string().default("210595"),
-  rrn: z.string().default("110480000001"),
 });
 
-export const FundTransferRequest = z.object({
+export const FundTransfer = z.object({
   transDateTime: z.string(),
   fromAccount: z.string(),
   nominal: z.string(),
   nomorVA: z.string(),
   keterangan: z.string(),
-  stan: z.string(),
-  rrn: z.string(),
 });
 
 export const ResponseStatus = z.object({
@@ -69,20 +63,20 @@ const State = z.object({
   loading: z.boolean().default(true),
   jenisID: z.number(),
   modeTransaksi: z.string(),
-  inquiryRequest: InquiryRequest,
+  inquiryRequest: Inquiry,
   inquiryResponse: InquiryResponse,
-  paymentVARequest: PaymentVARequest,
+  paymentVARequest: Payment,
   paymentVAResponse: ResponseStatus,
-  fundTransferRequest: FundTransferRequest,
+  fundTransferRequest: FundTransfer,
   fundTransferResponse: ResponseStatus,
 });
 
 export type Data = z.infer<typeof Data>;
 export type State = z.infer<typeof State>;
-export type InquiryRequest = z.infer<typeof InquiryRequest>;
+export type Inquiry = z.infer<typeof Inquiry>;
 export type InquiryResponse = z.infer<typeof InquiryResponse>;
-export type PaymentVARequest = z.infer<typeof PaymentVARequest>;
-export type FundTransferRequest = z.infer<typeof FundTransferRequest>;
+export type Payment = z.infer<typeof Payment>;
+export type FundTransfer = z.infer<typeof FundTransfer>;
 export type ResponseStatus = z.infer<typeof ResponseStatus>;
 
 export type Dispatcher = {
@@ -100,13 +94,11 @@ export type Dispatcher = {
   setKodeProduk: (kodeProduk: string) => void;
   setKodeKantorTx: (kodeKantorTx: string) => void;
   setKodeBank: (kodeBank: string) => void;
-  setStan: (stan: string) => void;
-  setRrn: (rrn: string) => void;
   setModeTransaksi: (modeTransaksi: string) => void;
   setInquiryResponse: (inquiryResponse: InquiryResponse) => void;
-  setPaymentVARequest: (paymentVARequest: PaymentVARequest) => void;
+  setPaymentVARequest: (paymentVARequest: Payment) => void;
   setPaymentVAResponse: (responseStatus: ResponseStatus) => void;
-  setFundTransferRequest: (fundTransferRequest: FundTransferRequest) => void;
+  setFundTransferRequest: (fundTransferRequest: FundTransfer) => void;
   setFundTransferResponse: (responseStatus: ResponseStatus) => void;
   toggleDebug: () => void;
 };

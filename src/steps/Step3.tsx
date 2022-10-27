@@ -1,5 +1,4 @@
 import { ChangeEvent, FormEvent, useState } from "react";
-import HackButton from "../components/HackButton";
 
 import {
   useAppState,
@@ -7,10 +6,14 @@ import {
   InquiryResponse,
   ResponseStatus,
 } from "../context/App";
-import { rupiah } from "../helpers/formatters";
-import { virtual_account } from "../helpers/masking";
+
+import HackButton from "../components/HackButton";
 
 import Status from "./Status";
+
+import { rupiah } from "../helpers/formatters";
+import { virtual_account } from "../helpers/masking";
+import Show from "../components/Show";
 
 const Step3 = () => {
   const { inquiryRequest, inquiryResponse } = useAppState();
@@ -55,8 +58,6 @@ const Step3 = () => {
           response.data.additionalData[parseInt(selectedPayment)].kodeTransaksi,
         kodeKantorTx: inquiryRequest.kodeKantorTx,
         kodeBank: inquiryRequest.kodeBank,
-        stan: inquiryRequest.stan,
-        rrn: inquiryRequest.rrn,
       });
 
       setModeTransaksi(
@@ -72,8 +73,6 @@ const Step3 = () => {
             .rekeningSumber,
         nomorVA:
           response.data.additionalData[parseInt(selectedPayment)].nomorVA,
-        rrn: inquiryRequest.rrn,
-        stan: inquiryRequest.stan,
         transDateTime: Date.now().toString(),
       });
 
@@ -89,7 +88,14 @@ const Step3 = () => {
 
   return (
     <div className="p-8 max-w-3xl w-full overflow-hidden">
-      {response.success ? (
+      <Show
+        when={response.success}
+        fallback={
+          <Show when={failedResponse.success}>
+            <Status {...failedResponse.data} />
+          </Show>
+        }
+      >
         <form onSubmit={handleSubmit}>
           <table>
             <tbody>
@@ -202,9 +208,7 @@ const Step3 = () => {
             Next
           </HackButton>
         </form>
-      ) : (
-        failedResponse.success && <Status {...failedResponse.data} />
-      )}
+      </Show>
     </div>
   );
 };
