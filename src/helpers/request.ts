@@ -48,7 +48,7 @@ export const fundTransfer = async (data: FundTransfer, token: string) => {
 };
 
 export const addBalance = async (data: Balance, token: string) => {
-  return axios.post(`${import.meta.env.VITE_API_INTERNAL}/balance`, data, {
+  return axios.post(`${import.meta.env.VITE_API_INTERNAL}/addbalance`, data, {
     headers: { Authorization: `Bearer ${token}` },
   });
 };
