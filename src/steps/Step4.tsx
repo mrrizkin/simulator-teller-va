@@ -1,5 +1,4 @@
 import { ChangeEvent, FormEvent, useState } from "react";
-import axios from "axios";
 
 import { useAppState, useAppDispatch } from "../context/App";
 
@@ -9,11 +8,14 @@ import Show from "../components/Show";
 
 import { currency, onlydigit, virtual_account } from "../helpers/masking";
 import { getPaymentToken } from "../helpers/auth";
+import { addBalance, fundTransfer, payment } from "../helpers/request";
 
 const Step4 = () => {
   const [showFormDetail, setShowFormDetail] = useState(true);
   const {
     modeTransaksi,
+    jenisTransaksi,
+    balanceRequest,
     paymentVARequest,
     externalToken,
     internalToken,
@@ -27,6 +29,8 @@ const Step4 = () => {
     setPaymentVAResponse,
     setFundTransferRequest,
     setFundTransferResponse,
+    setBalanceRequest,
+    setBalanceResponse,
     setLoading,
     setInternalToken,
   } = useAppDispatch();
@@ -35,6 +39,10 @@ const Step4 = () => {
     setPaymentVARequest({
       ...paymentVARequest,
       nominalVA: onlydigit(e.currentTarget.value),
+    });
+    setBalanceRequest({
+      ...balanceRequest,
+      nominal: onlydigit(e.currentTarget.value),
     });
   }
 
@@ -53,41 +61,52 @@ const Step4 = () => {
   }
 
   function makeRequest() {
-    axios
-      .post(
-        `${import.meta.env.VITE_API_EXTERNAL}/external/paymentVA`,
-        paymentVARequest,
-        { headers: { Authorization: `Bearer ${externalToken}` } }
-      )
+    payment(paymentVARequest, externalToken)
       .then((res: any) => {
         getInternalToken(3);
-        axios
-          .post(
-            `${import.meta.env.VITE_API_INTERNAL}/fundtransfer`,
-            fundTransferRequest,
-            {
-              headers: { Authorization: `Bearer ${internalToken}` },
-            }
-          )
-          .then((response) => {
-            setTimeout(() => {
-              setPaymentVAResponse(res.data);
-              setInquiryResponse(res.data);
-              setFundTransferResponse(response.data);
-              setLoading(false);
-              next();
-            }, 1500);
-          })
-          .catch((e: any) => {
-            setTimeout(() => {
-              setPaymentVAResponse(res.data);
-              setInquiryResponse(res.data);
-              console.warn(e);
-              alert("Fund Transfer fee failed");
-              setLoading(false);
-              next();
-            }, 1500);
-          });
+        if (jenisTransaksi === "D") {
+          fundTransfer(fundTransferRequest, internalToken)
+            .then((response) => {
+              setTimeout(() => {
+                setPaymentVAResponse(res.data);
+                setInquiryResponse(res.data);
+                setFundTransferResponse(response.data);
+                setLoading(false);
+                next();
+              }, 1500);
+            })
+            .catch((e: any) => {
+              setTimeout(() => {
+                setPaymentVAResponse(res.data);
+                setInquiryResponse(res.data);
+                console.warn(e);
+                alert("Fund Transfer fee failed");
+                setLoading(false);
+                next();
+              }, 1500);
+            });
+        } else {
+          addBalance(balanceRequest, internalToken)
+            .then((response) => {
+              setTimeout(() => {
+                setPaymentVAResponse(res.data);
+                setInquiryResponse(res.data);
+                setBalanceResponse(response.data);
+                setLoading(false);
+                next();
+              }, 1500);
+            })
+            .catch((e: any) => {
+              setTimeout(() => {
+                setPaymentVAResponse(res.data);
+                setInquiryResponse(res.data);
+                console.warn(e);
+                alert("Add balance failed");
+                setLoading(false);
+                next();
+              }, 1500);
+            });
+        }
       })
       .catch((e: any) => {
         setTimeout(() => {

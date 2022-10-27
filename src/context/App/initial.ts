@@ -10,6 +10,15 @@ const initialState: State = {
   loading: true,
   jenisID: 1,
   modeTransaksi: "1",
+  jenisTransaksi: "K",
+  balanceRequest: {
+    rekening: "0",
+    nominal: "0",
+  },
+  balanceResponse: {
+    message: "",
+    status: "",
+  },
   inquiryRequest: Inquiry.parse({ nomorVA: "", nomorIdentitas: "" }),
   inquiryResponse: {
     nomorVA: "",

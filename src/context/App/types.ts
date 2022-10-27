@@ -49,6 +49,11 @@ export const FundTransfer = z.object({
   keterangan: z.string(),
 });
 
+export const Balance = z.object({
+  rekening: z.string().default("0"),
+  nominal: z.string().default("0"),
+});
+
 export const ResponseStatus = z.object({
   message: z.string(),
   status: z.string(),
@@ -63,6 +68,9 @@ const State = z.object({
   loading: z.boolean().default(true),
   jenisID: z.number(),
   modeTransaksi: z.string(),
+  jenisTransaksi: z.string(),
+  balanceRequest: Balance,
+  balanceResponse: ResponseStatus,
   inquiryRequest: Inquiry,
   inquiryResponse: InquiryResponse,
   paymentVARequest: Payment,
@@ -73,6 +81,7 @@ const State = z.object({
 
 export type Data = z.infer<typeof Data>;
 export type State = z.infer<typeof State>;
+export type Balance = z.infer<typeof Balance>;
 export type Inquiry = z.infer<typeof Inquiry>;
 export type InquiryResponse = z.infer<typeof InquiryResponse>;
 export type Payment = z.infer<typeof Payment>;
@@ -87,6 +96,8 @@ export type Dispatcher = {
   setExternalToken: (token: string) => void;
   setInternalToken: (token: string) => void;
   setLoading: (loading: boolean) => void;
+  setBalanceRequest: (balanceRequest: Balance) => void;
+  setBalanceResponse: (balanceResponse: ResponseStatus) => void;
   setJenisID: (jenisID: number) => void;
   setNoIdentitas: (noIdentitas: string) => void;
   setNoVA: (noVA: string) => void;
@@ -95,6 +106,7 @@ export type Dispatcher = {
   setKodeKantorTx: (kodeKantorTx: string) => void;
   setKodeBank: (kodeBank: string) => void;
   setModeTransaksi: (modeTransaksi: string) => void;
+  setJenisTransaksi: (jenisTransaksi: string) => void;
   setInquiryResponse: (inquiryResponse: InquiryResponse) => void;
   setPaymentVARequest: (paymentVARequest: Payment) => void;
   setPaymentVAResponse: (responseStatus: ResponseStatus) => void;

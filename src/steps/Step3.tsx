@@ -22,8 +22,10 @@ const Step3 = () => {
     next,
     setLoading,
     setPaymentVARequest,
+    setJenisTransaksi,
     setModeTransaksi,
     setFundTransferRequest,
+    setBalanceRequest,
   } = useAppDispatch();
   const [selectedPayment, setSelectedPayment] = useState("0");
 
@@ -64,6 +66,10 @@ const Step3 = () => {
         response.data.additionalData[parseInt(selectedPayment)].jenisTransaksi
       );
 
+      setJenisTransaksi(
+        response.data.additionalData[parseInt(selectedPayment)].kodeTransaksi
+      );
+
       setFundTransferRequest({
         keterangan: "",
         nominal:
@@ -74,6 +80,13 @@ const Step3 = () => {
         nomorVA:
           response.data.additionalData[parseInt(selectedPayment)].nomorVA,
         transDateTime: Date.now().toString(),
+      });
+
+      setBalanceRequest({
+        rekening:
+          response.data.additionalData[parseInt(selectedPayment)]
+            .rekeningSumber,
+        nominal: response.data.nominalTotal,
       });
 
       next();

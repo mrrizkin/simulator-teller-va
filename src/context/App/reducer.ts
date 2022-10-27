@@ -49,6 +49,16 @@ const reducer = (draft: State, action: Action) => {
       return;
     case "SET_MODE_TRANSAKSI":
       draft.modeTransaksi = action.payload;
+      return;
+    case "SET_JENIS_TRANSAKSI":
+      draft.jenisTransaksi = action.payload;
+      return;
+    case "SET_BALANCE_REQUEST":
+      draft.balanceRequest = action.payload;
+      return;
+    case "SET_BALANCE_RESPONSE":
+      draft.balanceResponse = action.payload;
+      return;
     case "SET_FUNDTRANSFER_REQUEST":
       draft.fundTransferRequest = action.payload;
       return;

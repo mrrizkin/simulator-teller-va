@@ -25,6 +25,14 @@ const dispatcher = (dispatch: Dispatch<Action>): Dispatcher => {
     dispatch({ type: "KODE_BANK", payload: kodeBank });
   }
 
+  function setBalanceRequest(balanceRequest: any) {
+    dispatch({ type: "BALANCE_REQUEST", payload: balanceRequest });
+  }
+
+  function setBalanceResponse(balanceResponse: ResponseStatus) {
+    dispatch({ type: "BALANCE_RESPONSE", payload: balanceResponse });
+  }
+
   function setKodeInstansi(kodeInstansi: string) {
     dispatch({ type: "KODE_INSTANSI", payload: kodeInstansi });
   }
@@ -63,6 +71,10 @@ const dispatcher = (dispatch: Dispatch<Action>): Dispatcher => {
 
   function setModeTransaksi(modeTransaksi: string) {
     dispatch({ type: "SET_MODE_TRANSAKSI", payload: modeTransaksi });
+  }
+
+  function setJenisTransaksi(jenisTransaksi: string) {
+    dispatch({ type: "SET_JENIS_TRANSAKSI", payload: jenisTransaksi });
   }
 
   function setFundTransferRequest(fundTransferRequest: FundTransfer) {
@@ -106,6 +118,9 @@ const dispatcher = (dispatch: Dispatch<Action>): Dispatcher => {
     setKodeProduk,
     setLoading,
     setInternalToken,
+    setJenisTransaksi,
+    setBalanceResponse,
+    setBalanceRequest,
     setExternalToken,
     setInquiryResponse,
     setPaymentVARequest,
