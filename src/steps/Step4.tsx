@@ -7,7 +7,6 @@ import HackButton from "../components/HackButton";
 import Show from "../components/Show";
 
 import { currency, onlydigit, virtual_account } from "../helpers/masking";
-import { getPaymentToken } from "../helpers/auth";
 import {
   addBalance,
   fundTransfer,
@@ -37,7 +36,6 @@ const Step4 = () => {
     setBalanceRequest,
     setBalanceResponse,
     setLoading,
-    setInternalToken,
   } = useAppDispatch();
 
   function handleChange(e: ChangeEvent<HTMLInputElement>) {
