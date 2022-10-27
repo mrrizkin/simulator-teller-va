@@ -1,8 +1,9 @@
 import { ChangeEvent, FormEvent, useState } from "react";
-import { useAppState, useAppDispatch } from "../context/AppContext";
+import { useAppState, useAppDispatch } from "../context/App";
 import { TextInput, Label } from "../components/Input";
 import axios from "axios";
 import { currency, onlydigit, virtual_account } from "../helpers/masking";
+import HackButton from "../components/HackButton";
 
 const Step4 = () => {
   const [showFormDetail, setShowFormDetail] = useState(true);
@@ -232,18 +233,19 @@ const Step4 = () => {
         />
         <label htmlFor="showFormDetail">Show Form Detail</label>
       </div>
-      <button
+      <HackButton
         type="button"
         onClick={back}
-        className="bg-gray-500 text-white mr-4 rounded-md mt-4 px-8 py-2 btn-hacktober outline-none focus:border-blue-500"
+        className="bg-gray-500 text-white mr-4 rounded-md mt-4 px-8 py-2 outline-none focus:border-blue-500"
       >
         Back
-      </button>
-      <input
+      </HackButton>
+      <HackButton
         type="submit"
-        value="Next"
-        className="bg-blue-500 text-white rounded-md mt-4 px-8 py-2 btn-hacktober outline-none focus:border-blue-500"
-      />
+        className="bg-blue-500 text-white rounded-md mt-4 px-8 py-2 outline-none focus:border-blue-500"
+      >
+        Next
+      </HackButton>
     </form>
   );
 };

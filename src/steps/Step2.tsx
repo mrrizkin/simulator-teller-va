@@ -3,8 +3,9 @@ import axios from "axios";
 
 import { onlydigit, virtual_account } from "../helpers/masking";
 
-import { useAppDispatch, useAppState } from "../context/AppContext";
+import { useAppDispatch, useAppState } from "../context/App";
 import { Label, TextInput } from "../components/Input";
+import HackButton from "../components/HackButton";
 
 const Step2 = () => {
   const [showFormDetail, setShowFormDetail] = useState(false);
@@ -162,18 +163,19 @@ const Step2 = () => {
         />
         <label htmlFor="showFormDetail">Show Form Detail</label>
       </div>
-      <button
+      <HackButton
         type="button"
         onClick={back}
-        className="bg-gray-500 text-white mr-4 rounded-md mt-4 px-8 py-2 outline-none btn-hacktober focus:border-blue-500"
+        className="bg-gray-500 text-white mr-4 rounded-md mt-4 px-8 py-2 outline-none focus:border-blue-500"
       >
         Back
-      </button>
-      <input
+      </HackButton>
+      <HackButton
         type="submit"
-        value="Next"
-        className="bg-blue-500 text-white rounded-md mt-4 px-8 py-2 btn-hacktober outline-none focus:border-blue-500"
-      />
+        className="bg-blue-500 text-white rounded-md mt-4 px-8 py-2 outline-none focus:border-blue-500"
+      >
+        Next
+      </HackButton>
     </form>
   );
 };

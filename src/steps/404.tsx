@@ -1,4 +1,4 @@
-import { useAppDispatch } from "../context/AppContext";
+import { useAppDispatch } from "../context/App";
 
 const NotFound = () => {
   const { back } = useAppDispatch();

@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import axios from "axios";
 
-import { useAppDispatch, useAppState } from "./context/AppContext";
+import { useAppDispatch, useAppState } from "./context/App";
 
 import NotFound from "./steps/404";
 import Refresh from "./steps/Refresh";
@@ -43,7 +43,7 @@ const App = () => {
             setTimeout(() => {
               console.warn(e);
               setExternalToken(res.data.token);
-              alert("Initializing failed");
+              alert("Initializing payment failed");
               setLoading(false);
             }, 1500);
           });
@@ -51,7 +51,7 @@ const App = () => {
       .catch((e) => {
         setTimeout(() => {
           console.warn(e);
-          alert("Initializing failed");
+          alert("Initializing cbs failed");
           setLoading(false);
         }, 1500);
       });

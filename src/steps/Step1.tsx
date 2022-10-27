@@ -1,5 +1,5 @@
 import Globe from "../components/Globe";
-import { useAppDispatch } from "../context/AppContext";
+import { useAppDispatch } from "../context/App";
 
 const Step1 = () => {
   const { next, setJenisID } = useAppDispatch();
@@ -14,14 +14,14 @@ const Step1 = () => {
   return (
     <div className="text-center">
       <div className="relative w-full flex justify-center">
-        <Globe/>
+        <Globe />
         <div className="py-8">
-          <h1 className="text-4xl font-bold">Simulator Teller Virtual Account</h1>
-
+          <h1 className="text-4xl font-bold">
+            Simulator Teller Virtual Account
+          </h1>
         </div>
-        
       </div>
-      
+
       <div className="relative w-full flex justify-center gap-x-32 mt-15">
         <div
           onClick={jenis(1)}
