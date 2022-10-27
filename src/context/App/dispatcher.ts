@@ -26,11 +26,11 @@ const dispatcher = (dispatch: Dispatch<Action>): Dispatcher => {
   }
 
   function setBalanceRequest(balanceRequest: any) {
-    dispatch({ type: "BALANCE_REQUEST", payload: balanceRequest });
+    dispatch({ type: "SET_BALANCE_REQUEST", payload: balanceRequest });
   }
 
   function setBalanceResponse(balanceResponse: ResponseStatus) {
-    dispatch({ type: "BALANCE_RESPONSE", payload: balanceResponse });
+    dispatch({ type: "SET_BALANCE_RESPONSE", payload: balanceResponse });
   }
 
   function setKodeInstansi(kodeInstansi: string) {

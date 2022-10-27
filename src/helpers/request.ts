@@ -52,3 +52,9 @@ export const addBalance = async (data: Balance, token: string) => {
     headers: { Authorization: `Bearer ${token}` },
   });
 };
+
+export const subBalance = async (data: Balance, token: string) => {
+  return axios.post(`${import.meta.env.VITE_API_INTERNAL}/subbalance`, data, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+};

@@ -8,7 +8,12 @@ import Show from "../components/Show";
 
 import { currency, onlydigit, virtual_account } from "../helpers/masking";
 import { getPaymentToken } from "../helpers/auth";
-import { addBalance, fundTransfer, payment } from "../helpers/request";
+import {
+  addBalance,
+  fundTransfer,
+  payment,
+  subBalance,
+} from "../helpers/request";
 
 const Step4 = () => {
   const [showFormDetail, setShowFormDetail] = useState(true);
@@ -63,7 +68,6 @@ const Step4 = () => {
   function makeRequest() {
     payment(paymentVARequest, externalToken)
       .then((res: any) => {
-        getInternalToken(3);
         if (jenisTransaksi === "D") {
           fundTransfer(fundTransferRequest, internalToken)
             .then((response) => {
@@ -81,6 +85,26 @@ const Step4 = () => {
                 setInquiryResponse(res.data);
                 console.warn(e);
                 alert("Fund Transfer fee failed");
+                setLoading(false);
+                next();
+              }, 1500);
+            });
+          subBalance(balanceRequest, internalToken)
+            .then((response) => {
+              setTimeout(() => {
+                setPaymentVAResponse(res.data);
+                setInquiryResponse(res.data);
+                setBalanceResponse(response.data);
+                setLoading(false);
+                next();
+              }, 1500);
+            })
+            .catch((e: any) => {
+              setTimeout(() => {
+                setPaymentVAResponse(res.data);
+                setInquiryResponse(res.data);
+                console.warn(e);
+                alert("Add balance failed");
                 setLoading(false);
                 next();
               }, 1500);
@@ -114,29 +138,6 @@ const Step4 = () => {
           alert("Payment VA failed");
           setLoading(false);
         }, 1500);
-      });
-  }
-
-  function getInternalToken(retry: number) {
-    getPaymentToken()
-      .then((respond) => {
-        setTimeout(() => {
-          setInternalToken(respond.data.token);
-          setLoading(false);
-        }, 1500);
-        return;
-      })
-      .catch((e) => {
-        if (retry > 0) {
-          getInternalToken(retry - 1);
-          return;
-        }
-        setTimeout(() => {
-          console.warn(e);
-          alert("Failed get internal token");
-          setLoading(false);
-        }, 1500);
-        return;
       });
   }
 
