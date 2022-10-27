@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useAppState } from "../context/AppContext";
+import { useAppState } from "../context/App";
 
 const Debugger = () => {
   const state = useAppState();

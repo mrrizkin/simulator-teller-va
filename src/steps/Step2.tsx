@@ -1,10 +1,12 @@
 import { ChangeEvent, FormEvent, useState } from "react";
 import axios from "axios";
 
-import { onlydigit, virtual_account } from "../helpers/masking";
-
-import { useAppDispatch, useAppState } from "../context/AppContext";
+import { useAppDispatch, useAppState } from "../context/App";
 import { Label, TextInput } from "../components/Input";
+import HackButton from "../components/HackButton";
+import Show from "../components/Show";
+
+import { onlydigit, virtual_account } from "../helpers/masking";
 
 const Step2 = () => {
   const [showFormDetail, setShowFormDetail] = useState(false);
@@ -16,8 +18,6 @@ const Step2 = () => {
     back,
     setLoading,
     setInquiryResponse,
-    setStan,
-    setRrn,
     setKodeProduk,
     setKodeInstansi,
     setKodeBank,
@@ -63,7 +63,19 @@ const Step2 = () => {
 
   return (
     <form onSubmit={handleSubmit} className="max-w-xl w-full">
-      {jenisID === 1 ? (
+      <Show
+        when={jenisID === 1}
+        fallback={
+          <>
+            <Label className="text-xl">[No. Identity]</Label>
+            <TextInput
+              value={virtual_account(inquiryRequest.nomorIdentitas)}
+              onChange={handleChange}
+              className="border-3 border-gray-500 p-2"
+            />
+          </>
+        }
+      >
         <>
           <Label className="text-xl">[No. Virtual Account]</Label>
           <TextInput
@@ -72,17 +84,8 @@ const Step2 = () => {
             className="border-3 border-gray-500 p-2"
           />
         </>
-      ) : (
-        <>
-          <Label className="text-xl">[No. Identity]</Label>
-          <TextInput
-            value={virtual_account(inquiryRequest.nomorIdentitas)}
-            onChange={handleChange}
-            className="border-3 border-gray-500 p-2"
-          />
-        </>
-      )}
-      {showFormDetail && (
+      </Show>
+      <Show when={showFormDetail}>
         <div className="text-gray-400">
           <div className="flex gap-8 py-4">
             <div className="flex-1">
@@ -128,30 +131,8 @@ const Step2 = () => {
               />
             </div>
           </div>
-          <div className="flex gap-8 py-4">
-            <div className="flex-1">
-              <Label>[stan]</Label>
-              <TextInput
-                value={inquiryRequest.stan}
-                onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                  setStan(e.currentTarget.value)
-                }
-                className="border-3 border-gray-500 p-1"
-              />
-            </div>
-            <div className="flex-1">
-              <Label>[rrn]</Label>
-              <TextInput
-                value={inquiryRequest.rrn}
-                onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                  setRrn(e.currentTarget.value)
-                }
-                className="border-3 border-gray-500 p-1"
-              />
-            </div>
-          </div>
         </div>
-      )}
+      </Show>
       <div className="text-xs mt-4 flex gap-x-2 items-center">
         <input
           type="checkbox"
@@ -162,18 +143,19 @@ const Step2 = () => {
         />
         <label htmlFor="showFormDetail">Show Form Detail</label>
       </div>
-      <button
+      <HackButton
         type="button"
         onClick={back}
-        className="bg-gray-500 text-white mr-4 rounded-md mt-4 px-8 py-2 outline-none btn-hacktober focus:border-blue-500"
+        className="bg-gray-500 text-white mr-4 rounded-md mt-4 px-8 py-2 outline-none focus:border-blue-500"
       >
         Back
-      </button>
-      <input
+      </HackButton>
+      <HackButton
         type="submit"
-        value="Next"
-        className="bg-blue-500 text-white rounded-md mt-4 px-8 py-2 btn-hacktober outline-none focus:border-blue-500"
-      />
+        className="bg-blue-500 text-white rounded-md mt-4 px-8 py-2 outline-none focus:border-blue-500"
+      >
+        Next
+      </HackButton>
     </form>
   );
 };

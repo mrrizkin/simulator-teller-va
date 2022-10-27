@@ -5,11 +5,15 @@ import {
   useAppDispatch,
   InquiryResponse,
   ResponseStatus,
-} from "../context/AppContext";
-import { rupiah } from "../helpers/formatters";
-import { virtual_account } from "../helpers/masking";
+} from "../context/App";
+
+import HackButton from "../components/HackButton";
 
 import Status from "./Status";
+
+import { rupiah } from "../helpers/formatters";
+import { virtual_account } from "../helpers/masking";
+import Show from "../components/Show";
 
 const Step3 = () => {
   const { inquiryRequest, inquiryResponse } = useAppState();
@@ -18,8 +22,10 @@ const Step3 = () => {
     next,
     setLoading,
     setPaymentVARequest,
+    setJenisTransaksi,
     setModeTransaksi,
     setFundTransferRequest,
+    setBalanceRequest,
   } = useAppDispatch();
   const [selectedPayment, setSelectedPayment] = useState("0");
 
@@ -54,12 +60,14 @@ const Step3 = () => {
           response.data.additionalData[parseInt(selectedPayment)].kodeTransaksi,
         kodeKantorTx: inquiryRequest.kodeKantorTx,
         kodeBank: inquiryRequest.kodeBank,
-        stan: inquiryRequest.stan,
-        rrn: inquiryRequest.rrn,
       });
 
       setModeTransaksi(
         response.data.additionalData[parseInt(selectedPayment)].jenisTransaksi
+      );
+
+      setJenisTransaksi(
+        response.data.additionalData[parseInt(selectedPayment)].kodeTransaksi
       );
 
       setFundTransferRequest({
@@ -71,9 +79,14 @@ const Step3 = () => {
             .rekeningSumber,
         nomorVA:
           response.data.additionalData[parseInt(selectedPayment)].nomorVA,
-        rrn: inquiryRequest.rrn,
-        stan: inquiryRequest.stan,
         transDateTime: Date.now().toString(),
+      });
+
+      setBalanceRequest({
+        rekening:
+          response.data.additionalData[parseInt(selectedPayment)]
+            .rekeningSumber,
+        nominal: response.data.nominalTotal,
       });
 
       next();
@@ -88,7 +101,14 @@ const Step3 = () => {
 
   return (
     <div className="p-8 max-w-3xl w-full overflow-hidden">
-      {response.success ? (
+      <Show
+        when={response.success}
+        fallback={
+          <Show when={failedResponse.success}>
+            <Status {...failedResponse.data} />
+          </Show>
+        }
+      >
         <form onSubmit={handleSubmit}>
           <table>
             <tbody>
@@ -150,10 +170,11 @@ const Step3 = () => {
                       </span>
                     </div>
                     <span
-                      className={`absolute top-0 right-0 ${isSelected(index.toString())
-                        ? "bg-blue-500"
-                        : "bg-gray-500"
-                        } px-2 py-1 rounded-tr-md rounded-bl-md text-xs`}
+                      className={`absolute top-0 right-0 ${
+                        isSelected(index.toString())
+                          ? "bg-blue-500"
+                          : "bg-gray-500"
+                      } px-2 py-1 rounded-tr-md rounded-bl-md text-xs`}
                     >
                       {data.jenisTransaksi === "1" ? "close" : "open"}
                     </span>
@@ -186,22 +207,21 @@ const Step3 = () => {
               </tr>
             </tbody>
           </table>
-          <button
+          <HackButton
             type="button"
             onClick={back}
-            className="bg-gray-500 text-white mr-4 rounded-md mt-4 px-8 py-2 btn-hacktober outline-none focus:border-blue-500"
+            className="bg-gray-500 text-white mr-4 rounded-md mt-4 px-8 py-2 outline-none focus:border-blue-500"
           >
             Back
-          </button>
-          <input
+          </HackButton>
+          <HackButton
             type="submit"
-            value="Next"
-            className="bg-blue-500 text-white rounded-md mt-4 px-8 py-2 btn-hacktober outline-none focus:border-blue-500"
-          />
+            className="bg-blue-500 text-white rounded-md mt-4 px-8 py-2 outline-none focus:border-blue-500"
+          >
+            Next
+          </HackButton>
         </form>
-      ) : (
-        failedResponse.success && <Status {...failedResponse.data} />
-      )}
+      </Show>
     </div>
   );
 };

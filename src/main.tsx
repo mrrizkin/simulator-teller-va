@@ -4,7 +4,7 @@ import App from "./App";
 
 import "virtual:windi.css";
 import "./index.css";
-import { AppContextProvider } from "./context/AppContext";
+import { AppContextProvider } from "./context/App";
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>

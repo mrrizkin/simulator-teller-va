@@ -1,9 +1,5 @@
 import { ChangeEvent, useState } from "react";
-import {
-  useAppDispatch,
-  useAppState,
-  InquiryResponse,
-} from "../context/AppContext";
+import { useAppDispatch, useAppState, InquiryResponse } from "../context/App";
 
 const Controller = () => {
   const { setLoading, reset, next, back, setToken, setInquiryResponse } =
