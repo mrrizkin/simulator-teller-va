@@ -13,7 +13,6 @@ import Status from "./Status";
 
 import { rupiah } from "../helpers/formatters";
 import { virtual_account } from "../helpers/masking";
-import Show from "../components/Show";
 
 const Step3 = () => {
   const { inquiryRequest, inquiryResponse } = useAppState();
