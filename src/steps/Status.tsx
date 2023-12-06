@@ -7,12 +7,12 @@ import Show from "../components/Show";
 
 const Status = (props: z.infer<typeof ResponseStatus>) => {
   const { step, maxStep } = useAppState();
-  const { back, setStep } = useAppDispatch();
+  const { reset } = useAppDispatch();
 
   const { status, message } = props;
 
   function handleNext() {
-    setStep(3);
+    reset();
   }
 
   return (
@@ -33,20 +33,20 @@ const Status = (props: z.infer<typeof ResponseStatus>) => {
         fallback={
           <HackButton
             type="button"
-            onClick={back}
+            onClick={reset}
             className="bg-gray-500 text-white mr-4 rounded-md mt-4 px-8 py-2 outline-none focus:border-blue-500"
           >
-            Go Back
+            Reset
           </HackButton>
         }
       >
         <div>
           <HackButton
             type="button"
-            onClick={back}
+            onClick={reset}
             className="bg-gray-500 text-white mr-4 rounded-md mt-4 px-8 py-2 outline-none focus:border-blue-500"
           >
-            Go Back
+            Reset
           </HackButton>
 
           <HackButton

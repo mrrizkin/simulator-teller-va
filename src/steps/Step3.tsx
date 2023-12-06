@@ -13,7 +13,6 @@ import Status from "./Status";
 
 import { rupiah } from "../helpers/formatters";
 import { virtual_account } from "../helpers/masking";
-import Show from "../components/Show";
 
 const Step3 = () => {
   const { inquiryRequest, inquiryResponse } = useAppState();
@@ -101,14 +100,7 @@ const Step3 = () => {
 
   return (
     <div className="p-8 max-w-3xl w-full overflow-hidden">
-      <Show
-        when={response.success}
-        fallback={
-          <Show when={failedResponse.success}>
-            <Status {...failedResponse.data} />
-          </Show>
-        }
-      >
+      {response.success ? (
         <form onSubmit={handleSubmit}>
           <table>
             <tbody>
@@ -221,7 +213,9 @@ const Step3 = () => {
             Next
           </HackButton>
         </form>
-      </Show>
+      ) : (
+        failedResponse.success && <Status {...failedResponse.data} />
+      )}
     </div>
   );
 };

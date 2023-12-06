@@ -66,6 +66,10 @@ const Step4 = () => {
   function makeRequest() {
     payment(paymentVARequest, externalToken)
       .then((res: any) => {
+        if (res.rc != "00") {
+          alert(res.rc + " " + res.message);
+          return;
+        }
         if (jenisTransaksi === "D") {
           fundTransfer(fundTransferRequest, internalToken)
             .then((response) => {
